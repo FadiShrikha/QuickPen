@@ -8,4 +8,19 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Icons\icons8-color-swatch-48.png" />
+    <None Remove="Icons\icons8-eraser-64.png" />
+    <None Remove="Icons\icons8-paintbrush-48.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Icons\icons8-eraser-64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Icons\icons8-color-swatch-48.png" />
+    <Resource Include="Icons\icons8-paintbrush-48.png" />
+  </ItemGroup>
+
 </Project>

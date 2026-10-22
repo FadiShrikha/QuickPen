@@ -21,6 +21,7 @@ namespace QuickPen
         {
             InitializeComponent();
             SourceInitialized+=(s,e)=> Wincorner.ChangeCornerStyle(this, Wincorner.CornerStyle.Round);
+            SourceInitialized += (s, e) => Blureffect.EnableBlur(this);
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)

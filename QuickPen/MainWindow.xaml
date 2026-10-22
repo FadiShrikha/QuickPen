@@ -6,8 +6,49 @@
         xmlns:local="clr-namespace:QuickPen"
         mc:Ignorable="d"
         MouseDown="Window_MouseDown"
-        Height="300" ResizeMode="NoResize" WindowStyle="None" Width="30">
-    <Grid>
+        Height="150" ResizeMode="NoResize" WindowStyle="None"  Background="Transparent" Width="40">
+    
+    <Window.Resources>
+        <Style TargetType="Border" x:Key="BorderStyle">
+            
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="White"/>
+                </Trigger>
+                
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="ToggleButton" x:Key="ToggleButtonsStyle">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate x:Name="ctrlTem"  TargetType="ToggleButton" >
+                        <Border x:Name="buttonborder" CornerRadius="10"   BorderThickness="1.6">
+                            <Image Source="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="buttonborder" Property="BorderBrush" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="False">
+                                <Setter TargetName="buttonborder" Property="BorderBrush" Value="DarkCyan"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="buttonborder" Property="BorderBrush" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+    </Window.Resources>
+    
+    <StackPanel >
 
-    </Grid>
+
+        <ToggleButton  Width="30" Height="30" Style="{StaticResource ToggleButtonsStyle}" Tag="/Icons/icons8-color-swatch-48.png" Margin="0,10,0,15"/>
+        <ToggleButton  Width="30" Height="30" Style="{StaticResource ToggleButtonsStyle}" Tag="/Icons/icons8-paintbrush-48.png" Margin="0,0,0,15" />
+        <ToggleButton  Width="30" Height="30" Style="{StaticResource ToggleButtonsStyle}" Tag="/Icons/icons8-eraser-64.png" Margin="0,0,0,15"/>
+
+    </StackPanel>
 </Window>
