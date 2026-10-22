@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:QuickPen"
         mc:Ignorable="d"
         MouseDown="Window_MouseDown"
-        Height="150" ResizeMode="NoResize" WindowStyle="None"  Background="Transparent" Width="40">
+        ResizeMode="NoResize" WindowState="Maximized"  WindowStyle="None" Topmost="True" Background="Transparent" >
     
     <Window.Resources>
         <Style TargetType="Border" x:Key="BorderStyle">
@@ -30,7 +30,7 @@
                                 <Setter TargetName="buttonborder" Property="BorderBrush" Value="White"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="False">
-                                <Setter TargetName="buttonborder" Property="BorderBrush" Value="DarkCyan"/>
+                                <Setter TargetName="buttonborder" Property="BorderBrush" Value="#FF15600F"/>
                             </Trigger>
                             <Trigger Property="IsChecked" Value="True">
                                 <Setter TargetName="buttonborder" Property="BorderBrush" Value="White"/>
@@ -42,13 +42,16 @@
         </Style>
         
     </Window.Resources>
-    
-    <StackPanel >
+    <Canvas>
+        <Image Name="Wallpaper" Source="{Binding WallImage }" Panel.ZIndex="0"/>
+        <Border Height="150" Width="40" HorizontalAlignment="Left" VerticalAlignment="Center" Background="#FF062E03">
+        <StackPanel>
 
-
+        
         <ToggleButton  Width="30" Height="30" Style="{StaticResource ToggleButtonsStyle}" Tag="/Icons/icons8-color-swatch-48.png" Margin="0,10,0,15"/>
         <ToggleButton  Width="30" Height="30" Style="{StaticResource ToggleButtonsStyle}" Tag="/Icons/icons8-paintbrush-48.png" Margin="0,0,0,15" />
-        <ToggleButton  Width="30" Height="30" Style="{StaticResource ToggleButtonsStyle}" Tag="/Icons/icons8-eraser-64.png" Margin="0,0,0,15"/>
-
-    </StackPanel>
+            <ToggleButton  Width="30" Height="30" Style="{StaticResource ToggleButtonsStyle}" Tag="/Icons/icons8-eraser-64.png" Margin="0,0,0,15"/>
+        </StackPanel>
+    </Border>
+    </Canvas>
 </Window>
