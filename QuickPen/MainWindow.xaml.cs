@@ -26,44 +26,40 @@ namespace QuickPen
     public partial class MainWindow : Window
     {
         GlobalHotKey Q_Alt_HotKey;
-        private readonly DrawingAttributes DrawingPen = new() {  Color= System.Windows.Media.Color.FromRgb(255,255,255), Width=5,Height=5 };
-        private readonly DrawingAttributes Eraser = new DrawingAttributes() { Height = 30, Width=30 };
+        private readonly DrawingAttributes DrawingPen = new() { Color = System.Windows.Media.Color.FromRgb(255, 255, 255), Width = 5, Height = 5 };
+        private readonly DrawingAttributes Eraser = new DrawingAttributes() { Height = 30, Width = 30 };
 
         Bitmap Framebmb;
         Graphics graphics;
+
         System.Drawing.Point WidthAndHeight;
         public MainWindow()
         {
             InitializeComponent();
             DataContext = this;
-            
+
             SourceInitialized += MainWindow_SourceInitialized;
             WidthAndHeight = new() { X = SystemInformation.VirtualScreen.Width, Y = SystemInformation.VirtualScreen.Height };
 
-            Framebmb = new(WidthAndHeight.X, WidthAndHeight.Y);
-            graphics = Graphics.FromImage(Framebmb);
-            this.Dispatcher.Invoke(() =>
+            this.Dispatcher.Invoke(async () =>
             {
-                GetAScreenShot();
-                if(Framebmb!=null)
-                this.Wallpaper.Source = BitmapToImageSource(Framebmb);
+                using (Bitmap bmp = new(WidthAndHeight.X, WidthAndHeight.Y))
+                {
+                    using (Graphics g = Graphics.FromImage(bmp))
+                    {
+                        System.Drawing.Size s = new() { Width = WidthAndHeight.X, Height = WidthAndHeight.Y };
+
+                        g.CopyFromScreen(System.Drawing.Point.Empty, System.Drawing.Point.Empty, s);
+
+                        g.Flush();
+
+                        this.Wallpaper.Source = await BitmapToImageSource(bmp);
+                    }
+
+                }
             });
             this.DrawCanvas.DefaultDrawingAttributes = DrawingPen;
-            
-        }
-
-        public void GetAScreenShot()
-        {
-
-
-            System.Drawing.Size s = new() { Width = WidthAndHeight.X, Height = WidthAndHeight.Y };
-
-            graphics.CopyFromScreen(System.Drawing.Point.Empty, System.Drawing.Point.Empty, s);
-
-            graphics.Flush();
-
-            
-
+            this.Visibility = Visibility.Visible;
         }
 
         private void MainWindow_SourceInitialized(object sender, EventArgs e)
@@ -88,27 +84,41 @@ namespace QuickPen
             var MSG = (WindowMessage)msg;
             if (MSG == WindowMessage.WM_HotKey)
             {
-                
-                this.Dispatcher.Invoke(() =>
+
+
+                if (this.IsVisible)
                 {
-                    GetAScreenShot();
-                    if (Framebmb != null)
-                        this.Wallpaper.Source = BitmapToImageSource(Framebmb);
-                });
-                if(this.IsVisible)
-                {
-                    this.Hide();
+                    this.Visibility = Visibility.Hidden;
                 }
-                else 
+                else
                 {
-                    this.Show();
+                    this.Dispatcher.Invoke(async () =>
+                    {
+
+                        using (Bitmap bmp = new(WidthAndHeight.X, WidthAndHeight.Y))
+                        {
+                            using (Graphics g = Graphics.FromImage(bmp))
+                            {
+                                System.Drawing.Size s = new() { Width = WidthAndHeight.X, Height = WidthAndHeight.Y };
+
+                                g.CopyFromScreen(System.Drawing.Point.Empty, System.Drawing.Point.Empty, s);
+
+                                g.Flush();
+
+                                this.Wallpaper.Source = await BitmapToImageSource(bmp);
+                            }
+
+                        }
+                    });
+
+                    this.Visibility = Visibility.Visible;
                 }
             }
 
             return IntPtr.Zero;
         }
-        
-        private BitmapImage BitmapToImageSource(System.Drawing.Bitmap bitmap)
+
+        private async Task<BitmapImage> BitmapToImageSource(System.Drawing.Bitmap bitmap)
         {
             using (MemoryStream memory = new MemoryStream())
             {
@@ -119,7 +129,7 @@ namespace QuickPen
                 bitmapimage.StreamSource = memory;
                 bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
                 bitmapimage.EndInit();
-                
+                bitmapimage.Freeze();
                 return bitmapimage;
             }
         }
