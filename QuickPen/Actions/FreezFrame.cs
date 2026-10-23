@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace QuickPen.Actions
 {
@@ -25,8 +27,10 @@ namespace QuickPen.Actions
             Size s = new Size { Width=SizeOfDisplay.Width, Height = SizeOfDisplay.Height };
 
             Bitmap memoryImage = new Bitmap(s.Width, s.Height);
-            Graphics memoryGraphics = Graphics.FromImage(memoryImage);
+            
+            using Graphics memoryGraphics = Graphics.FromImage(memoryImage);
             memoryGraphics.CopyFromScreen(Point.Empty, Point.Empty, s);
+            
             memoryGraphics.Flush();
 
             return memoryImage;

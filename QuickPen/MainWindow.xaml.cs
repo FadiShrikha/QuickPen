@@ -6,14 +6,17 @@ using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace QuickPen
 {
@@ -23,14 +26,18 @@ namespace QuickPen
     public partial class MainWindow : Window
     {
         GlobalHotKey Q_Alt_HotKey;
-        Window CanvasWindow = new() { Topmost =false,WindowState = WindowState.Maximized, WindowStyle= WindowStyle.None};
-        bool CanvasWindowIsnopen = false;
+        private readonly DrawingAttributes DrawingPen = new() {  Color= System.Windows.Media.Color.FromRgb(255,255,255), Width=5,Height=5 };
+        private readonly DrawingAttributes Eraser = new DrawingAttributes() { Height = 30, Width=30 };
+        
+
         public MainWindow()
         {
             InitializeComponent();
             DataContext = this;
+            
             SourceInitialized += MainWindow_SourceInitialized;
-            //this.Hide();
+            this.DrawCanvas.DefaultDrawingAttributes = DrawingPen;
+            
         }
         public ImageSource WallImage { get; set; }
 
@@ -59,28 +66,21 @@ namespace QuickPen
                 
                 this.Dispatcher.Invoke(() =>
                 {
+                    
                     var GetBitMapFromScreen = FreezFrame.GetAScreenShot();
                     this.Wallpaper.Source = BitmapToImageSource(GetBitMapFromScreen);
-
                 });
-                CanvasWindowIsnopen = !CanvasWindowIsnopen;
-                if (CanvasWindowIsnopen)
+                if(this.IsVisible)
                 {
-                    this.Show();
+                    this.Hide();
                 }
                 else 
                 {
-                    this.Hide();
+                    this.Show();
                 }
             }
 
             return IntPtr.Zero;
-        }
-        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-
-
-            //DragMove();
         }
         
         private BitmapImage BitmapToImageSource(System.Drawing.Bitmap bitmap)
@@ -94,7 +94,44 @@ namespace QuickPen
                 bitmapimage.StreamSource = memory;
                 bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
                 bitmapimage.EndInit();
+                
                 return bitmapimage;
+            }
+        }
+        Slider ColorSlider = new() { Width = 30, Height = 30 };
+        private void SelectColor_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.SelectColor.IsChecked == false) return;
+            if (this.UseEraser.IsChecked == true) this.UseEraser.IsChecked = false;
+            if (this.UsePen.IsChecked == true) this.UsePen.IsChecked = false;
+ 
+        }
+
+        private void UsePen_Click(object sender, RoutedEventArgs e)
+        {
+            //If you clicked the pen button
+            if (this.UsePen.IsChecked == false) return;
+            if (this.UseEraser.IsChecked == true) this.UseEraser.IsChecked = false;
+            if (this.SelectColor.IsChecked == true) this.SelectColor.IsChecked = false;
+            this.DrawCanvas.EditingMode = InkCanvasEditingMode.Ink;
+            this.DrawCanvas.DefaultDrawingAttributes = DrawingPen;
+        }
+
+        private void UseEraser_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.UseEraser.IsChecked == false) return;
+            if (this.UsePen.IsChecked == true) this.UsePen.IsChecked = false;
+            if (this.SelectColor.IsChecked == true) this.SelectColor.IsChecked = false;
+
+            this.DrawCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
+            
+        }
+
+        private void UseEraser_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                EraserPop.IsOpen = !EraserPop.IsOpen;
             }
         }
     }
