@@ -1,22 +1,12 @@
 ﻿using QuickPen.Actions;
-using QuickPen.WindowAdj;
-using System.Diagnostics;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace QuickPen
 {
@@ -41,25 +31,8 @@ namespace QuickPen
             SourceInitialized += MainWindow_SourceInitialized;
             WidthAndHeight = new() { X = SystemInformation.VirtualScreen.Width, Y = SystemInformation.VirtualScreen.Height };
 
-            this.Dispatcher.Invoke(async () =>
-            {
-                using (Bitmap bmp = new(WidthAndHeight.X, WidthAndHeight.Y))
-                {
-                    using (Graphics g = Graphics.FromImage(bmp))
-                    {
-                        System.Drawing.Size s = new() { Width = WidthAndHeight.X, Height = WidthAndHeight.Y };
-
-                        g.CopyFromScreen(System.Drawing.Point.Empty, System.Drawing.Point.Empty, s);
-
-                        g.Flush();
-
-                        this.Wallpaper.Source = await BitmapToImageSource(bmp);
-                    }
-
-                }
-            });
             this.DrawCanvas.DefaultDrawingAttributes = DrawingPen;
-            this.Visibility = Visibility.Visible;
+
         }
 
         private void MainWindow_SourceInitialized(object sender, EventArgs e)
@@ -76,7 +49,7 @@ namespace QuickPen
         }
 
 
-
+        WriteableBitmap _wb;
         private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             // is this a HotKey ?
@@ -92,25 +65,29 @@ namespace QuickPen
                 }
                 else
                 {
-                    this.Dispatcher.Invoke(async () =>
+                    int w = WidthAndHeight.X, h = WidthAndHeight.Y;
+                    using var bmp = new Bitmap(w, h, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+                    using var g = Graphics.FromImage(bmp);
+
+                    g.CopyFromScreen(0, 0, 0, 0, new System.Drawing.Size(w, h));
+
+                    var data = bmp.LockBits(new System.Drawing.Rectangle(0, 0, w, h),
+                        System.Drawing.Imaging.ImageLockMode.ReadOnly, bmp.PixelFormat);
+                    try
                     {
-
-                        using (Bitmap bmp = new(WidthAndHeight.X, WidthAndHeight.Y))
+                        Dispatcher.Invoke(() =>
                         {
-                            using (Graphics g = Graphics.FromImage(bmp))
+                            if (_wb == null)
                             {
-                                System.Drawing.Size s = new() { Width = WidthAndHeight.X, Height = WidthAndHeight.Y };
+                                _wb = new WriteableBitmap(w, h, g.DpiX, g.DpiY, PixelFormats.Pbgra32, null);
+                                Wallpaper.Source = _wb;
 
-                                g.CopyFromScreen(System.Drawing.Point.Empty, System.Drawing.Point.Empty, s);
-
-                                g.Flush();
-
-                                this.Wallpaper.Source = await BitmapToImageSource(bmp);
                             }
+                            _wb.WritePixels(new Int32Rect(0, 0, w, h), data.Scan0, data.Stride * h, data.Stride);
 
-                        }
-                    });
-
+                        });
+                    }
+                    finally { bmp.UnlockBits(data); }
                     this.Visibility = Visibility.Visible;
                 }
             }
@@ -139,15 +116,15 @@ namespace QuickPen
             if (this.SelectColor.IsChecked == false) return;
             if (this.UseEraser.IsChecked == true) this.UseEraser.IsChecked = false;
             if (this.UsePen.IsChecked == true) this.UsePen.IsChecked = false;
- 
+
         }
 
         private void UsePen_Click(object sender, RoutedEventArgs e)
         {
             //If you clicked the pen button
             if (this.UsePen.IsChecked == false) return;
-            if (this.UseEraser.IsChecked == true) this.UseEraser.IsChecked = false;
-            if (this.SelectColor.IsChecked == true) this.SelectColor.IsChecked = false;
+            UseEraser.IsChecked = false;
+            SelectColor.IsChecked = false;
             this.DrawCanvas.EditingMode = InkCanvasEditingMode.Ink;
             this.DrawCanvas.DefaultDrawingAttributes = DrawingPen;
         }
@@ -155,12 +132,13 @@ namespace QuickPen
         private void UseEraser_Click(object sender, RoutedEventArgs e)
         {
             if (this.UseEraser.IsChecked == false) return;
-            if (this.UsePen.IsChecked == true) this.UsePen.IsChecked = false;
-            if (this.SelectColor.IsChecked == true) this.SelectColor.IsChecked = false;
-            if(EraseByStroke.IsChecked==true) this.DrawCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
+            this.UsePen.IsChecked = false;
+            this.SelectColor.IsChecked = false;
+
+            if (EraseByStroke.IsChecked == true) this.DrawCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
             else
-            this.DrawCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
-            
+                this.DrawCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
+
         }
 
         private void UseEraser_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -191,8 +169,21 @@ namespace QuickPen
             {
                 this.DrawCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
                 this.EraserPop.IsOpen = false;
-                
+
             }
+        }
+
+        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                this.Hide();
+            }
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.Hide();
         }
     }
 }

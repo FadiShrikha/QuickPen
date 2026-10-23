@@ -1,8 +1,4 @@
-﻿using System.Configuration;
-using System.Data;
-using System.Windows;
-
-namespace QuickPen
+﻿namespace QuickPen
 {
     /// <summary>
     /// Interaction logic for App.xaml
