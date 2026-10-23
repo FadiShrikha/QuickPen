@@ -28,12 +28,15 @@ namespace QuickPen.Actions
 
             Bitmap memoryImage = new Bitmap(s.Width, s.Height);
             
+
+
             using Graphics memoryGraphics = Graphics.FromImage(memoryImage);
             memoryGraphics.CopyFromScreen(Point.Empty, Point.Empty, s);
-            
+
             memoryGraphics.Flush();
 
             return memoryImage;
+            
         }
 
     }

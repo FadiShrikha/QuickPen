@@ -28,18 +28,43 @@ namespace QuickPen
         GlobalHotKey Q_Alt_HotKey;
         private readonly DrawingAttributes DrawingPen = new() {  Color= System.Windows.Media.Color.FromRgb(255,255,255), Width=5,Height=5 };
         private readonly DrawingAttributes Eraser = new DrawingAttributes() { Height = 30, Width=30 };
-        
 
+        Bitmap Framebmb;
+        Graphics graphics;
+        System.Drawing.Point WidthAndHeight;
         public MainWindow()
         {
             InitializeComponent();
             DataContext = this;
             
             SourceInitialized += MainWindow_SourceInitialized;
+            WidthAndHeight = new() { X = SystemInformation.VirtualScreen.Width, Y = SystemInformation.VirtualScreen.Height };
+
+            Framebmb = new(WidthAndHeight.X, WidthAndHeight.Y);
+            graphics = Graphics.FromImage(Framebmb);
+            this.Dispatcher.Invoke(() =>
+            {
+                GetAScreenShot();
+                if(Framebmb!=null)
+                this.Wallpaper.Source = BitmapToImageSource(Framebmb);
+            });
             this.DrawCanvas.DefaultDrawingAttributes = DrawingPen;
             
         }
-        public ImageSource WallImage { get; set; }
+
+        public void GetAScreenShot()
+        {
+
+
+            System.Drawing.Size s = new() { Width = WidthAndHeight.X, Height = WidthAndHeight.Y };
+
+            graphics.CopyFromScreen(System.Drawing.Point.Empty, System.Drawing.Point.Empty, s);
+
+            graphics.Flush();
+
+            
+
+        }
 
         private void MainWindow_SourceInitialized(object sender, EventArgs e)
         {
@@ -66,9 +91,9 @@ namespace QuickPen
                 
                 this.Dispatcher.Invoke(() =>
                 {
-                    
-                    var GetBitMapFromScreen = FreezFrame.GetAScreenShot();
-                    this.Wallpaper.Source = BitmapToImageSource(GetBitMapFromScreen);
+                    GetAScreenShot();
+                    if (Framebmb != null)
+                        this.Wallpaper.Source = BitmapToImageSource(Framebmb);
                 });
                 if(this.IsVisible)
                 {
@@ -122,8 +147,9 @@ namespace QuickPen
             if (this.UseEraser.IsChecked == false) return;
             if (this.UsePen.IsChecked == true) this.UsePen.IsChecked = false;
             if (this.SelectColor.IsChecked == true) this.SelectColor.IsChecked = false;
-
-            this.DrawCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
+            if(EraseByStroke.IsChecked==true) this.DrawCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
+            else
+            this.DrawCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
             
         }
 
@@ -132,6 +158,30 @@ namespace QuickPen
             if (e.ChangedButton == MouseButton.Left)
             {
                 EraserPop.IsOpen = !EraserPop.IsOpen;
+
+            }
+        }
+
+        private void EraseByPoint_Click(object sender, RoutedEventArgs e)
+        {
+            if (EraseByPoint.IsChecked == false && EraseByStroke.IsChecked == false) EraseByPoint.IsChecked = true;
+            EraseByStroke.IsChecked = false;
+            if (EraseByPoint.IsChecked == true)
+            {
+                this.DrawCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
+                this.EraserPop.IsOpen = false;
+            }
+        }
+
+        private void EraseByStroke_Click(object sender, RoutedEventArgs e)
+        {
+            if (EraseByPoint.IsChecked == false && EraseByStroke.IsChecked == false) EraseByStroke.IsChecked = true;
+            EraseByPoint.IsChecked = false;
+            if (EraseByStroke.IsChecked == true)
+            {
+                this.DrawCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
+                this.EraserPop.IsOpen = false;
+                
             }
         }
     }
