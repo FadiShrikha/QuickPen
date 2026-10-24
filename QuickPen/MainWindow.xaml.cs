@@ -1,4 +1,5 @@
-﻿using QuickPen.Actions;
+﻿using Haley.WPF.Controls;
+using QuickPen.Actions;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
@@ -21,7 +22,7 @@ namespace QuickPen
         private DrawingAttributes _DrawingPen = SetInkCanvasMode.GetDefualtAttributes();
         private SetInkCanvasMode _InkCanvasMode = new();
         private EditMod _editmod = new EditMod();
-        ColorDialog ColorPicker = new();
+
         System.Drawing.Point WidthAndHeight;
         public MainWindow()
         {
@@ -145,7 +146,7 @@ namespace QuickPen
         {
 
             this.Hide();
-
+           
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -153,19 +154,23 @@ namespace QuickPen
             var btn = sender as ToggleButton;
             if (btn == this.UsePen)
             {
+
                 if (this.UsePen.IsChecked == false) return;
                 this.UseEraser.IsChecked = false;
                 this.SelectColor.IsChecked = false;
                 this.SelectButton.IsChecked = false;
                 this.Highlighter.IsChecked = false;
-
+                this.ReBuildCanvas.IsChecked = false;
+                _InkCanvasMode._ColorPicker.ApplyTemplate();
                 if (UsePen.IsChecked == true)
                 {
                     _editmod.IsPen = true;
+                    _editmod.IsHighlighter = false;
                     _editmod.IsEraser = false;
                     _editmod.PenColor = _InkCanvasMode.CurrentColor;
                     _editmod.sizeOfBursh = BrushSizeType.Small;
                     _editmod.TypeOfTyping = InkCanvasEditingMode.Ink;
+                    
                     _InkCanvasMode.ChangeCanvasBehave(ref this.DrawCanvas, ref _DrawingPen, _editmod);
                 }
             }
@@ -176,6 +181,7 @@ namespace QuickPen
                 this.SelectColor.IsChecked = false;
                 this.Highlighter.IsChecked = false;
                 this.SelectButton.IsChecked = false;
+                this.ReBuildCanvas.IsChecked = false;
                 if (UseEraser.IsChecked == true)
                 {
                     _editmod.IsEraser = true;
@@ -196,7 +202,8 @@ namespace QuickPen
                 this.UsePen.IsChecked = false;
                 this.SelectButton.IsChecked = false;
                 this.Highlighter.IsChecked = false;
-                if(SelectColor.IsChecked==true)
+                this.ReBuildCanvas.IsChecked = false;
+                if (SelectColor.IsChecked==true)
                 if (_InkCanvasMode != null && _InkCanvasMode.ColorPicker != null)
                 {
                     try
@@ -260,7 +267,7 @@ namespace QuickPen
                     this.UsePen.IsChecked = false;
                     this.SelectButton.IsChecked = false;
                     this.SelectColor.IsChecked = false;
-
+                    this.ReBuildCanvas.IsChecked = false;
                     _editmod.IsPen = true;
                     _editmod.IsEraser = false;
                     _editmod.IsHighlighter = true;
@@ -274,9 +281,9 @@ namespace QuickPen
             {
                 this.UseEraser.IsChecked = false;
                 this.UsePen.IsChecked = false;
-                this.SelectButton.IsChecked = false;
+                this.SelectColor.IsChecked = false;
                 this.Highlighter.IsChecked = false;
-
+                this.ReBuildCanvas.IsChecked = false;
                 _editmod.IsPen = true;
                 _editmod.IsEraser = false;
                 _editmod.IsHighlighter = true;
@@ -284,6 +291,17 @@ namespace QuickPen
                 _editmod.sizeOfBursh = BrushSizeType.Large;
                 _editmod.TypeOfTyping = InkCanvasEditingMode.Select;
                 _InkCanvasMode.ChangeCanvasBehave(ref this.DrawCanvas, ref _DrawingPen, _editmod);
+            }
+            else if(btn == this.ReBuildCanvas)
+            {
+                this.UseEraser.IsChecked = false;
+                this.UsePen.IsChecked = false;
+                this.SelectButton.IsChecked = false;
+                this.Highlighter.IsChecked = false;
+                this.SelectColor.IsChecked = false;
+
+                DrawCanvas.Strokes.Clear();
+ 
             }
         }
     }

@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Icons\icons8-again-64.png" />
     <None Remove="Icons\icons8-check-50.png" />
     <None Remove="Icons\icons8-color-picker-64.png" />
     <None Remove="Icons\icons8-eraser-24.png" />
@@ -19,6 +20,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Haley.WPF" Version="5.5.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Icons\icons8-again-64.png" />
     <Resource Include="Icons\icons8-check-50.png" />
     <Resource Include="Icons\icons8-color-picker-64.png" />
     <Resource Include="Icons\icons8-eraser-24.png" />

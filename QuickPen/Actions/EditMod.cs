@@ -60,10 +60,13 @@ namespace QuickPen
         public Color CurrentColor;
         Color? LastColor;
         public ColorDialog ColorPicker;
+        public Haley.WPF.Controls.ColorPickerButton _ColorPicker;
 
         public SetInkCanvasMode()
         {
-            ColorPicker = new();
+            _ColorPicker = new() { Width = 40, Height = 40};
+            
+            ColorPicker = new() {  FullOpen=false,AllowFullOpen=false, ShowHelp=false , AnyColor=false, SolidColorOnly=true};
             ColorPicker.FullOpen = false;
             CurrentColor = Color.FromRgb(255, 255, 255);
         }
