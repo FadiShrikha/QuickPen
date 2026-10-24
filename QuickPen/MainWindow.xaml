@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QuickPen"
         mc:Ignorable="d"
-        ResizeMode="NoResize" WindowState="Maximized" Loaded="Window_Loaded"  KeyDown="Window_KeyDown"  WindowStyle="None" Topmost="True" Background="Transparent" >
+        ResizeMode="NoResize" WindowState="Maximized" Loaded="Window_Loaded" MouseWheel="Window_MouseWheel" KeyDown="Window_KeyDown"  WindowStyle="None" Topmost="True" Background="Transparent" >
     
     <Window.Resources>
         <Style TargetType="Border" x:Key="BorderStyle">
@@ -21,7 +21,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate x:Name="ctrlTem"  TargetType="ToggleButton" >
-                        <Border x:Name="buttonborder" CornerRadius="10"   BorderThickness="1.6">
+                        <Border x:Name="buttonborder" CornerRadius="10" Width="30" Height="30"  BorderThickness="1.6">
                             <Image Source="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"/>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -72,24 +72,25 @@
 
 
         <Image  Name="Wallpaper"  Panel.ZIndex="0"/>
-        <InkCanvas Name="DrawCanvas" Background="Transparent" Width="3000" Height="3000" Panel.ZIndex="1"/>
+        <InkCanvas Name="DrawCanvas" Background="Transparent" Panel.ZIndex="1"/>
 
-        <Border   Height="150" Margin="0,250,0,0" Width="40" Panel.ZIndex="2"  BorderThickness="2" BorderBrush="AliceBlue" CornerRadius="5" Background="#FF062E03">
+        <Border   Margin="0,250,0,0" Width="40" Panel.ZIndex="2"  BorderThickness="2" BorderBrush="AliceBlue" CornerRadius="5" Background="#FF062E03">
             <StackPanel Margin="0,-2,0,2">
 
-                <ToggleButton Name="SelectColor" Click="SelectColor_Click"  Width="30" Height="30" Style="{StaticResource ToggleButtonsStyle}" Tag="/Icons/icons8-color-swatch-48.png" Margin="0,10,0,15">
+                <ToggleButton Name="SelectColor" Click="Button_Click"   Style="{StaticResource ToggleButtonsStyle}" Tag="/Icons/icons8-color-picker-64.png" Margin="0,10,0,15">
                 </ToggleButton>
-                <ToggleButton  Name="UsePen" Click="UsePen_Click" Width="30" Height="30" Style="{StaticResource ToggleButtonsStyle}" Tag="/Icons/icons8-paintbrush-48.png" Margin="0,0,0,15" />
-                <ToggleButton Name="UseEraser" MouseDoubleClick="UseEraser_MouseDoubleClick" Click="UseEraser_Click" Width="30"    Height="30" Style="{StaticResource ToggleButtonsStyle}" Tag="/Icons/icons8-eraser-64.png" Margin="0,0,0,15">
+                <ToggleButton  Name="UsePen" Click="Button_Click"  Style="{StaticResource ToggleButtonsStyle}" Tag="/Icons/icons8-paint-64.png" Margin="0,0,0,15" />
+                <ToggleButton Name="UseEraser" MouseDoubleClick="UseEraser_MouseDoubleClick" Click="Button_Click" Style="{StaticResource ToggleButtonsStyle}" Tag="/Icons/icons8-eraser-24.png" Margin="0,0,0,15">
                     <Popup Name="EraserPop" AllowsTransparency="True" Placement="MousePoint" >
                         <StackPanel>
-                            <ToggleButton Click="EraseByPoint_Click" IsChecked="True" Name="EraseByPoint" Style="{StaticResource EraserButtonStyle}" Tag="Erase by point">
-
+                            <ToggleButton Click="Button_Click" IsChecked="True" Name="EraseByPoint" Style="{StaticResource EraserButtonStyle}" Tag="Erase by point">
                             </ToggleButton>
-                            <ToggleButton Click="EraseByStroke_Click" IsChecked="False" Name="EraseByStroke" Style="{ StaticResource EraserButtonStyle}" Tag="Erase by Stroke"></ToggleButton>
+                            <ToggleButton Click="Button_Click" IsChecked="False" Name="EraseByStroke" Style="{ StaticResource EraserButtonStyle}" Tag="Erase by Stroke"></ToggleButton>
                         </StackPanel>
                     </Popup>
                 </ToggleButton>
+                <ToggleButton Name="Highlighter" Style="{StaticResource ToggleButtonsStyle}" IsChecked="False" Margin="0,0,0,15" Click="Button_Click" Tag="/Icons/icons8-marker-pen-48.png" />
+                <ToggleButton Name="SelectButton" Style="{StaticResource ToggleButtonsStyle}" IsChecked="False" Margin="0,0,0,15" Click="Button_Click" Tag="/Icons/icons8-selection-60.png"/>
             </StackPanel>
     </Border>
     </Canvas>
