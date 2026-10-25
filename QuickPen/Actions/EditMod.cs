@@ -34,17 +34,17 @@ namespace QuickPen
         public Size Medium;
         public Size Large;
         public Size VeryLarge;
-        public Size brushsize;
+        public Size Defualtbrushsize;
         public BrushSize(BrushSizeType brushSizeType)
         {
-            Small = new(10,10);
-            Medium = new(20, 20);
-            Large = new(40, 40);
-            VeryLarge = new(60, 60);
-            if (brushSizeType == BrushSizeType.Small) brushsize = Small;
-            if (brushSizeType == BrushSizeType.Medium) brushsize = Medium;
-            if (brushSizeType == BrushSizeType.Large) brushsize = Large;
-            if (brushSizeType == BrushSizeType.VeryLarge) brushsize = VeryLarge;
+            Small = new(5,5);
+            Medium = new(10, 10);
+            Large = new(20, 20);
+            VeryLarge = new(40, 40);
+            if (brushSizeType == BrushSizeType.Small) Defualtbrushsize = Small;
+            if (brushSizeType == BrushSizeType.Medium) Defualtbrushsize = Medium;
+            if (brushSizeType == BrushSizeType.Large) Defualtbrushsize = Large;
+            if (brushSizeType == BrushSizeType.VeryLarge) Defualtbrushsize = VeryLarge;
 
         }
     }
@@ -64,7 +64,7 @@ namespace QuickPen
         Color? LastColor;
         public ColorDialog ColorPicker;
         public Haley.WPF.Controls.ColorPickerButton _ColorPicker;
-        private BrushSize _brushsize =new();
+        private BrushSize _brushsize =new( BrushSizeType.Medium);
 
         public SetInkCanvasMode()
         {
@@ -79,8 +79,11 @@ namespace QuickPen
             EditMod editMod = new();
 
             DrawingAttributes DefualtAtrribute = new()
-            {  Color=editMod.PenColor, IsHighlighter=editMod.IsHighlighter,Width=editMod.SetBrushSize.brushsize.Width, Height=editMod.SetBrushSize.brushsize.Height
+            {  Color=editMod.PenColor, IsHighlighter=editMod.IsHighlighter,Width=editMod.SetBrushSize.Defualtbrushsize.Width,
+                Height=editMod.SetBrushSize.Defualtbrushsize.Height
+            
             };
+            
             return DefualtAtrribute;
         }
 
@@ -136,9 +139,16 @@ namespace QuickPen
             inkCanvas.DefaultDrawingAttributes.Color = color;
         }
 
+        public void ChangeInkCanvasModeToPen(ref InkCanvas inkCanvas)
+        {
+            inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
+            inkCanvas.DefaultDrawingAttributes.IsHighlighter = false;
+        }
+
         public void SetOrRemoveHighlightPen(ref InkCanvas inkCanvas, bool SetHighLightMode)
         {
             inkCanvas.DefaultDrawingAttributes.IsHighlighter = SetHighLightMode;
+            inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
         }
 
         public void ChangeBrushToSelectMode(ref InkCanvas inkCanvas)
@@ -163,20 +173,23 @@ namespace QuickPen
         }
         public void ChangeBrushSize(ref InkCanvas inkCanvas, BrushSizeType Size)
         {
+ 
             switch (Size)
             {
                 case (BrushSizeType.Small):
                     {
-                        inkCanvas.DefaultDrawingAttributes.Width =_brushsize.Small.Width;
                         inkCanvas.DefaultDrawingAttributes.Height = _brushsize.Small.Height;
+                        inkCanvas.DefaultDrawingAttributes.Width =_brushsize.Small.Width;
 
                     }
 
                     break;
                 case (BrushSizeType.Medium):
                     {
-                        inkCanvas.DefaultDrawingAttributes.Width = _brushsize.Medium.Width;
+
                         inkCanvas.DefaultDrawingAttributes.Height = _brushsize.Medium.Height;
+                        inkCanvas.DefaultDrawingAttributes.Width = _brushsize.Medium.Width;
+                       
                     }
                     break;
                 case (BrushSizeType.Large):

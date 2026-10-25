@@ -7,7 +7,7 @@
         xmlns:hm="http://schemas.hpod9.com/haley/wpf"
         mc:Ignorable="d"
         ResizeMode="NoResize"  WindowState="Maximized" Loaded="Window_Loaded" Background="Transparent"
-        MouseWheel="Window_MouseWheel" KeyDown="Window_KeyDown"  WindowStyle="None" Topmost="True" >
+        MouseWheel="Window_MouseWheel" KeyDown="Window_KeyDown" PreviewMouseDown="Window_MouseDown" WindowStyle="None" Topmost="True" >
     
     <Window.Resources>
         <Style TargetType="Border" x:Key="BorderStyle">
@@ -72,7 +72,6 @@
     
     <Canvas Name="MainCanvas">
 
-
         <Image  Name="Wallpaper"  Panel.ZIndex="0"/>
         <InkCanvas Name="DrawCanvas" Background="Transparent" Panel.ZIndex="1"/>    
         
@@ -81,13 +80,19 @@
 
                 <ToggleButton Name="SelectColor" Click="Button_Click"   Style="{StaticResource ToggleButtonsStyle}" Tag="/Icons/icons8-color-picker-64.png" Margin="0,10,0,15"/>
 
-                <ToggleButton  Name="UsePen" Click="Button_Click"  Style="{StaticResource ToggleButtonsStyle}" Tag="/Icons/icons8-paint-64.png" Margin="0,0,0,15" />
-                <ToggleButton Name="UseEraser" MouseDoubleClick="UseEraser_MouseDoubleClick" Click="Button_Click" Style="{StaticResource ToggleButtonsStyle}" Tag="/Icons/icons8-eraser-24.png" Margin="0,0,0,15">
-                    <Popup Name="EraserPop" AllowsTransparency="True" Placement="MousePoint" >
+                <ToggleButton  Name="UsePen" MouseDoubleClick="Btn_MouseDoubleClick" Click="Button_Click"  Style="{StaticResource ToggleButtonsStyle}" Tag="/Icons/icons8-paint-64.png" Margin="0,0,0,15" >
+                    <Popup Name="BrushSizeSliderPopup" AllowsTransparency="True" Width="160" Placement="MousePoint" Height="33" IsOpen="False" PopupAnimation="Slide">
+                        <Border CornerRadius="5" Background="Green" BorderBrush="Silver" Panel.ZIndex="4"  >
+                            <Slider Name="BrushSizeSlider" Maximum="3" Value="0" ValueChanged="Slider_ValueChanged"  TickPlacement="BottomRight" VerticalAlignment="Center" Height="25" Width="150" HorizontalAlignment="Center"   IsSnapToTickEnabled="True"  />
+                        </Border>
+                    </Popup>
+                </ToggleButton>
+                <ToggleButton Name="UseEraser" MouseDoubleClick="Btn_MouseDoubleClick" Click="Button_Click" Style="{StaticResource ToggleButtonsStyle}" Tag="/Icons/icons8-eraser-24.png" Margin="0,0,0,15">
+                    <Popup Name="EraserPop"  AllowsTransparency="True" Placement="MousePoint" IsOpen="False" PopupAnimation="Slide" >
                         <StackPanel>
-                            <ToggleButton Click="Button_Click" IsChecked="True" Name="EraseByPoint" Style="{StaticResource EraserButtonStyle}" Tag="Erase by point">
+                            <ToggleButton Click="Button_Click" IsChecked="False" Name="EraseByPoint" Style="{StaticResource EraserButtonStyle}" Tag="Erase by point">
                             </ToggleButton>
-                            <ToggleButton Click="Button_Click" IsChecked="False" Name="EraseByStroke" Style="{ StaticResource EraserButtonStyle}" Tag="Erase by Stroke"></ToggleButton>
+                            <ToggleButton Click="Button_Click" IsChecked="True" Name="EraseByStroke" Style="{ StaticResource EraserButtonStyle}" Tag="Erase by Stroke"></ToggleButton>
                         </StackPanel>
                     </Popup>
                 </ToggleButton>

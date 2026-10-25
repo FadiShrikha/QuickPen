@@ -21,8 +21,6 @@ namespace QuickPen
         GlobalHotKey Q_Alt_HotKey;
         private DrawingAttributes _DrawingPen = SetInkCanvasMode.GetDefualtAttributes();
         private SetInkCanvasMode _InkCanvasMode = new();
-        private EditMod _editmod = new EditMod();
-
         System.Drawing.Point WidthAndHeight;
         public MainWindow()
         {
@@ -117,13 +115,28 @@ namespace QuickPen
 
 
 
-        private void UseEraser_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void Btn_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Left)
+            var Btn = sender as ToggleButton;
+            if (Btn == this.UseEraser)
             {
-                EraserPop.IsOpen = !EraserPop.IsOpen;
+                if (e.ChangedButton == MouseButton.Left)
+                {
+                    EraserPop.IsOpen = !EraserPop.IsOpen;
 
+                }
             }
+            else if (Btn == this.UsePen)
+            {
+                if (e.ChangedButton == MouseButton.Left)
+                {
+                    this.BrushSizeSliderPopup.IsOpen = !BrushSizeSliderPopup.IsOpen;
+
+                }
+            }
+
+
+
         }
 
         private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
@@ -131,6 +144,12 @@ namespace QuickPen
             if (e.Key == Key.Escape)
             {
                 this.Hide();
+
+            }
+            if (this.Visibility == Visibility.Hidden)
+            {
+                EraserPop.IsOpen = false;
+                this.BrushSizeSliderPopup.IsOpen = false;
             }
         }
 
@@ -140,85 +159,74 @@ namespace QuickPen
             DrawCanvas.Height = this.Height;
 
             this.Hide();
+            EraserPop.IsOpen = false;
+            this.BrushSizeSliderPopup.IsOpen = false;
         }
 
         private void Window_MouseWheel(object sender, MouseWheelEventArgs e)
         {
 
             this.Hide();
-           
+            EraserPop.IsOpen = false;
+            this.BrushSizeSliderPopup.IsOpen = false;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var btn = sender as ToggleButton;
-            if (btn == this.UsePen)
-            {
 
-                if (this.UsePen.IsChecked == false) return;
+            var btn = sender as ToggleButton;
+            if (btn?.IsChecked == true)
+            {
                 this.UseEraser.IsChecked = false;
                 this.SelectColor.IsChecked = false;
                 this.SelectButton.IsChecked = false;
                 this.Highlighter.IsChecked = false;
                 this.ReBuildCanvas.IsChecked = false;
+                this.UsePen.IsChecked = false;
+            }
 
+            btn?.IsChecked = true;
+
+            if (btn == this.UsePen)
+            {
                 if (UsePen.IsChecked == true)
                 {
-                    _editmod.IsPen = true;
-                    _editmod.IsHighlighter = false;
-                    _editmod.IsEraser = false;
-                    _editmod.PenColor = _InkCanvasMode.CurrentColor;
-                    _editmod.sizeOfBursh = BrushSizeType.Small;
-                    _editmod.TypeOfTyping = InkCanvasEditingMode.Ink;
+                    _InkCanvasMode.ChangeInkCanvasModeToPen(ref DrawCanvas);
                     
-                    _InkCanvasMode.ChangeCanvasBehave(ref this.DrawCanvas, ref _DrawingPen, _editmod);
                 }
             }
             else if (btn == this.UseEraser)
             {
-                if (this.UseEraser.IsChecked == false) return;
-                this.UsePen.IsChecked = false;
-                this.SelectColor.IsChecked = false;
-                this.Highlighter.IsChecked = false;
-                this.SelectButton.IsChecked = false;
-                this.ReBuildCanvas.IsChecked = false;
+
                 if (UseEraser.IsChecked == true)
                 {
-                    _editmod.IsEraser = true;
-
-                    if (EraseByStroke.IsChecked == true)
-                        _editmod.EraseBy = InkCanvasEditingMode.EraseByStroke;
-                    else _editmod.EraseBy = InkCanvasEditingMode.EraseByPoint;
-
-                    _editmod.IsPen = false;
-                    _editmod.IsHighlighter = false;
-                    _InkCanvasMode.ChangeCanvasBehave(ref this.DrawCanvas, ref _DrawingPen, _editmod);
+                    if (EraseByPoint.IsChecked == true)
+                    {
+                        _InkCanvasMode.ChangeInkCanvasToEraserMode(ref DrawCanvas, ErasingTypes.EraseByPoint);
+                    }
+                    else
+                    {
+                        _InkCanvasMode.ChangeInkCanvasToEraserMode(ref DrawCanvas, ErasingTypes.EraseByStroke);
+                    }
                 }
             }
             else if (btn == this.SelectColor)
             {
-                if (this.SelectColor.IsChecked == false) return;
-                this.UseEraser.IsChecked = false;
-                this.UsePen.IsChecked = false;
-                this.SelectButton.IsChecked = false;
-                this.Highlighter.IsChecked = false;
-                this.ReBuildCanvas.IsChecked = false;
                 if (SelectColor.IsChecked==true)
                 if (_InkCanvasMode != null && _InkCanvasMode.ColorPicker != null)
                 {
                     try
                     {
-                        _InkCanvasMode.ColorPicker.ShowDialog();
-                        var ARBG = _InkCanvasMode.ColorPicker.Color;
-                        _InkCanvasMode.CurrentColor = System.Windows.Media.Color.FromArgb
-                            (ARBG.A, ARBG.R, ARBG.G, ARBG.B);
+                            _InkCanvasMode.ColorPicker.ShowDialog();
 
-                        _editmod.IsPen = true;
-                        _editmod.IsEraser = false;
-                        _editmod.PenColor = _InkCanvasMode.CurrentColor;
-                        _editmod.sizeOfBursh = BrushSizeType.Small;
-                        _editmod.TypeOfTyping = InkCanvasEditingMode.Ink;
-                        _InkCanvasMode.ChangeCanvasBehave(ref this.DrawCanvas, ref _DrawingPen, _editmod);
+                            var ARBG = _InkCanvasMode.ColorPicker.Color;
+                            var color = System.Windows.Media.Color.FromArgb
+                                (ARBG.A, ARBG.R, ARBG.G, ARBG.B);
+
+                            _InkCanvasMode.ChangeBrushColor(ref DrawCanvas, color);
+                            _InkCanvasMode.ChangeInkCanvasModeToPen(ref DrawCanvas);
+                            
+                           
 
                     }
                     catch (Exception ex)
@@ -235,12 +243,7 @@ namespace QuickPen
 
                 if (EraseByPoint.IsChecked == true)
                 {
-                    _editmod.IsEraser = true;
-                    _editmod.IsHighlighter = false;
-                    _editmod.EraseBy = InkCanvasEditingMode.EraseByPoint;
-                    _editmod.IsPen = false;
-                    _editmod.IsHighlighter = false;
-                    _InkCanvasMode.ChangeCanvasBehave(ref this.DrawCanvas, ref _DrawingPen, _editmod);
+                    _InkCanvasMode.ChangeInkCanvasToEraserMode(ref DrawCanvas, ErasingTypes.EraseByPoint);
                 }
             }
             else if (btn == this.EraseByStroke)
@@ -250,12 +253,7 @@ namespace QuickPen
 
                 if (EraseByStroke.IsChecked == true)
                 {
-
-                    _editmod.IsEraser = true;
-                    _editmod.EraseBy = InkCanvasEditingMode.EraseByStroke;
-                    _editmod.IsPen = false;
-                    _editmod.IsHighlighter = false;
-                    _InkCanvasMode.ChangeCanvasBehave(ref this.DrawCanvas, ref _DrawingPen, _editmod);
+                    _InkCanvasMode.ChangeInkCanvasToEraserMode(ref DrawCanvas, ErasingTypes.EraseByStroke);
 
                 }
             }
@@ -263,45 +261,89 @@ namespace QuickPen
             {
                 if (Highlighter.IsChecked == true)
                 {
-                    this.UseEraser.IsChecked = false;
-                    this.UsePen.IsChecked = false;
-                    this.SelectButton.IsChecked = false;
-                    this.SelectColor.IsChecked = false;
-                    this.ReBuildCanvas.IsChecked = false;
-                    _editmod.IsPen = true;
-                    _editmod.IsEraser = false;
-                    _editmod.IsHighlighter = true;
-                    _editmod.PenColor = _InkCanvasMode.CurrentColor;
-                    _editmod.sizeOfBursh = BrushSizeType.Large;
-                    _editmod.TypeOfTyping = InkCanvasEditingMode.Ink;
-                    _InkCanvasMode.ChangeCanvasBehave(ref this.DrawCanvas, ref _DrawingPen, _editmod);
+
+                    if (Highlighter.IsChecked == true)
+                    {
+                        _InkCanvasMode.SetOrRemoveHighlightPen(ref DrawCanvas, true);
+                    }
+                    else
+                    {
+                        _InkCanvasMode.SetOrRemoveHighlightPen(ref DrawCanvas, false);
+                    }
+
                 }
             }
             else if (btn == this.SelectButton)
             {
-                this.UseEraser.IsChecked = false;
-                this.UsePen.IsChecked = false;
-                this.SelectColor.IsChecked = false;
-                this.Highlighter.IsChecked = false;
-                this.ReBuildCanvas.IsChecked = false;
-                _editmod.IsPen = true;
-                _editmod.IsEraser = false;
-                _editmod.IsHighlighter = true;
-                _editmod.PenColor = _InkCanvasMode.CurrentColor;
-                _editmod.sizeOfBursh = BrushSizeType.Large;
-                _editmod.TypeOfTyping = InkCanvasEditingMode.Select;
-                _InkCanvasMode.ChangeCanvasBehave(ref this.DrawCanvas, ref _DrawingPen, _editmod);
+
+                if (SelectButton.IsChecked == true)
+                {
+                    _InkCanvasMode.ChangeBrushToSelectMode(ref DrawCanvas);
+                }
+
             }
             else if(btn == this.ReBuildCanvas)
             {
-                this.UseEraser.IsChecked = false;
-                this.UsePen.IsChecked = false;
-                this.SelectButton.IsChecked = false;
-                this.Highlighter.IsChecked = false;
-                this.SelectColor.IsChecked = false;
 
-                DrawCanvas.Strokes.Clear();
+                if (ReBuildCanvas.IsChecked == true)
+                {
+                    _InkCanvasMode.ResetInkCanvas(ref DrawCanvas);
+                    _InkCanvasMode.ChangeInkCanvasModeToPen(ref DrawCanvas);
+                }
  
+            }
+        }
+
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            var slider = sender as Slider;
+            if(slider == this.BrushSizeSlider)
+            {
+                switch (BrushSizeSlider.Value)
+                {
+                    case 0:
+                        {
+                            _InkCanvasMode.ChangeBrushSize(ref DrawCanvas, BrushSizeType.Small);
+                        }
+                        break;
+                    case 1:
+                        {
+                            _InkCanvasMode.ChangeBrushSize(ref DrawCanvas, BrushSizeType.Medium);
+                        }
+                        break;
+                    case 2:
+                        {
+                            _InkCanvasMode.ChangeBrushSize(ref DrawCanvas, BrushSizeType.Large);
+                        }
+                        break;
+                    case 3:
+                        {
+                            _InkCanvasMode.ChangeBrushSize(ref DrawCanvas, BrushSizeType.VeryLarge);
+                        }
+                        break;
+                    default:
+                        {
+                            _InkCanvasMode.ChangeBrushSize(ref DrawCanvas, BrushSizeType.Small);
+                        }
+                        break;
+                }
+                
+            }
+
+        }
+
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                if (this.BrushSizeSliderPopup.IsMouseOver == false && this.BrushSizeSliderPopup.IsOpen == true)
+                {
+                    this.BrushSizeSliderPopup.IsOpen = false;
+                }
+                if (this.EraserPop.IsMouseOver == false && this.EraserPop.IsOpen == true)
+                {
+                    this.EraserPop.IsOpen = false;
+                }
             }
         }
     }
