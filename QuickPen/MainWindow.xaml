@@ -87,15 +87,15 @@
             <StackPanel Margin="0,-2,0,2">
                 <Border Name="CurrentColorBorder" Background="{Binding _CurrentColor}" BorderBrush="#FF15600F" Margin="0,10,0,15" CornerRadius="10" Width="30" Height="30"  BorderThickness="1.6" />
                 <ToggleButton Name="SelectColor" Click="Button_Click"   Style="{StaticResource ToggleButtonsStyle}" Tag="/Icons/icons8-color-picker-64.png" Margin="0,0,0,15">
-                    <Popup Name="ChangeColorSlider" IsOpen="False" Width="300" Height="30" AllowsTransparency="True" Placement="MousePoint">
-                        <Border  CornerRadius="5" Background="Green" BorderBrush="Silver" BorderThickness="1.6" Height="30" Width="300"  Panel.ZIndex="4" >
-                            <StackPanel Height="25" Width="300" Orientation="Horizontal" Panel.ZIndex="4" >
+                    <Popup Name="ChangeColorSliderPop" IsOpen="False" Width="300" Height="55" AllowsTransparency="True" Placement="MousePoint">
+                        <Border Name="AllColorsBorder" CornerRadius="5" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                Background="Green" BorderBrush="Silver" BorderThickness="1.6" Height="40" Width="210"  >
+                            <Canvas Width="200" Height="25" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <Image Name="RgbColorsImage" Source="/Icons/RGB_Allcolors.png" VerticalAlignment="Center" HorizontalAlignment="Center" Height="30" Width="200" Panel.ZIndex="0"/>
 
-                                <Border Name="AllColorsBorder" CornerRadius="5"  Height="25" Width="255"   >
-                                    <Slider Name="AllColorsSlider" Maximum="7" IsSnapToTickEnabled="True" SnapsToDevicePixels="True"  Value="0" Height="25" Width="255" ValueChanged="Slider_ValueChanged" Opacity="0.6" VerticalAlignment="Center"  />
-                                </Border>
-                                <Border CornerRadius="5" Width="30" Height="20" Background="{Binding ElementName=CurrentColorBorder,Path=Background}" Margin="10,0,0,0" />
-                            </StackPanel>
+                                <Slider Name="AllColorsSlider" Maximum="198" BorderBrush="AliceBlue" BorderThickness="2"  
+                                            Value="0" Height="30" Width="200" ValueChanged="Slider_ValueChanged" HorizontalAlignment="Center"  VerticalAlignment="Center"  />
+                            </Canvas>
                         </Border>
                     </Popup>
                 </ToggleButton>
@@ -103,12 +103,11 @@
                 <ToggleButton  Name="UsePen" MouseDoubleClick="Btn_MouseDoubleClick" Click="Button_Click"  Style="{StaticResource ToggleButtonsStyle}" Tag="/Icons/icons8-paint-64.png" Margin="0,0,0,15" >
                     <Popup Name="BrushSizeSliderPopup" AllowsTransparency="True" Width="160" Placement="MousePoint" Height="33" IsOpen="False" PopupAnimation="Slide">
                         <Border CornerRadius="5" Background="Green" BorderBrush="Silver" BorderThickness="1.6" Height="25" Width="150"  Panel.ZIndex="4"  >
-                            <Canvas>
-                                <Image Name="RgbColorsImage" Source="/Icons/RGB_Allcolors.png" Panel.ZIndex="0"/>
-                                <Slider Name="BrushSizeSlider" Maximum="3" Value="0" 
-                                 ValueChanged="Slider_ValueChanged" Width="150" Height="25"  TickPlacement="BottomRight" 
-                                        VerticalAlignment="Center"  HorizontalAlignment="Center"   IsSnapToTickEnabled="True"  />
-                            </Canvas>
+
+                            <Slider Name="BrushSizeSlider" Maximum="3" Value="0" 
+                                ValueChanged="Slider_ValueChanged" Width="150" Height="25"  IsSnapToTickEnabled="True"
+                                    VerticalAlignment="Center"  HorizontalAlignment="Center"     />
+
                          
                         </Border>
                     </Popup>

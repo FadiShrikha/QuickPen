@@ -67,7 +67,10 @@ namespace QuickPen
 
                 if (this.IsVisible)
                 {
-                    this.Visibility = Visibility.Hidden;
+                    EraserPop.IsOpen = false;
+                    this.BrushSizeSliderPopup.IsOpen = false;
+                    this.ChangeColorSliderPop.IsOpen = false;
+                    this.Hide();
                 }
                 else
                 {
@@ -151,7 +154,7 @@ namespace QuickPen
 
         private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            if (e.Key == Key.Escape)
+            if (e.Key == Key.Escape ||e.Key==Key.Enter||e.Key==Key.Enter||e.Key==Key.LWin||e.Key==Key.RWin)
             {
                 this.Hide();
 
@@ -160,6 +163,7 @@ namespace QuickPen
             {
                 EraserPop.IsOpen = false;
                 this.BrushSizeSliderPopup.IsOpen = false;
+                this.ChangeColorSliderPop.IsOpen = false;
             }
         }
 
@@ -167,10 +171,11 @@ namespace QuickPen
         {
             DrawCanvas.Width = this.Width;
             DrawCanvas.Height = this.Height;
-
-            this.Hide();
             EraserPop.IsOpen = false;
             this.BrushSizeSliderPopup.IsOpen = false;
+            this.ChangeColorSliderPop.IsOpen = false;
+            this.Hide();
+
         }
 
         private void Window_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -231,7 +236,7 @@ namespace QuickPen
                 {
                     try
                     {
-                            this.ChangeColorSlider.IsOpen = true;
+                            this.ChangeColorSliderPop.IsOpen = true;
                             _InkCanvasMode.ChangeInkCanvasModeToPen(ref DrawCanvas);
                             
                            
@@ -339,19 +344,21 @@ namespace QuickPen
             }
             else if (slider == this.AllColorsSlider)
             {
-                Debug.WriteLine(AllColorsSlider.Value);
-                //_CurrentColor =_InkCanvasMode.GetColorFromSlider((int)AllColorsSlider.Value);
-                BitmapImage RGBImage = (BitmapImage)this.RgbColorsImage.Source;
-                _CurrentColor = _InkCanvasMode.GetColorFromSlider((int)AllColorsSlider.Value, RGBImage);
-                
-                if(DrawCanvas!=null)
-                _InkCanvasMode.ChangeBrushColor(ref DrawCanvas, _CurrentColor);
-
-                this.Dispatcher.Invoke(() =>
+                if (RgbColorsImage != null)
                 {
-                   if(CurrentColorBorder!=null)
-                    this.CurrentColorBorder.Background = new SolidColorBrush(_CurrentColor);
-                });
+                    BitmapSource RGBImage = (BitmapSource)this.RgbColorsImage.Source;
+
+                    _CurrentColor = _InkCanvasMode.GetColorFromSlider((int)AllColorsSlider.Value, RGBImage);
+
+                    if (DrawCanvas != null)
+                        _InkCanvasMode.ChangeBrushColor(ref DrawCanvas, _CurrentColor);
+
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        if (CurrentColorBorder != null)
+                            this.CurrentColorBorder.Background = new SolidColorBrush(_CurrentColor);
+                    });
+                }
 
 
             }
@@ -370,9 +377,9 @@ namespace QuickPen
                 {
                     this.EraserPop.IsOpen = false;
                 }
-                if (this.ChangeColorSlider.IsMouseOver == false && this.ChangeColorSlider.IsOpen == true)
+                if (this.ChangeColorSliderPop.IsMouseOver == false && this.ChangeColorSliderPop.IsOpen == true)
                 {
-                    this.ChangeColorSlider.IsOpen = false;
+                    this.ChangeColorSliderPop.IsOpen = false;
                 }
             }
         }
