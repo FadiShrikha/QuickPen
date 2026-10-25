@@ -1,6 +1,9 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Ink;
+using System.Windows.Media.Imaging;
 using Color = System.Windows.Media.Color;
+using Size = System.Windows.Size;
 namespace QuickPen
 {
     public struct EditMod
@@ -14,6 +17,7 @@ namespace QuickPen
         public BrushSize SetBrushSize;
         public System.Windows.Media.Color PenColor;
         public System.Windows.Media.Color? LastColor; 
+
         public EditMod()
         {
             IsPen = true;
@@ -54,9 +58,19 @@ namespace QuickPen
     }
     public enum ErasingTypes
     {
-        EraseByPoint,EraseByStroke
+        EraseByPoint, EraseByStroke
     }
 
+    public struct RGB 
+    {
+        public float R, G, B;
+        public RGB(int r,int g,int b)
+        {
+            R = r;
+            G = g;
+            B = b;
+        }
+    }
 
     public class SetInkCanvasMode
     {
@@ -205,7 +219,92 @@ namespace QuickPen
                     }
                     break;
             }
-            
+        }
+
+        public System.Windows.Media.Color GetColorFromSlider(int value)
+        {
+            RGB rgb = new(0, 0, 0);
+            switch (value)
+            {
+                 
+                case 0:
+                    {
+                        //black
+                        rgb=new(0,0,0);
+                        
+                    }
+                    break;
+                case 1:
+                    {
+                        //white
+                        rgb = new(255,255,255);
+                    }
+                    break;
+                case 2:
+                    {
+                        //red
+                        rgb = new(255, 0, 0);
+                    }
+                    break;
+                case 3:
+                    {
+                        //green
+                        rgb = new(0, 255, 0);
+                    }
+                    break;
+
+                case 4:
+                    {
+                        //orange
+                        rgb = new(255, 130, 0);
+
+                    }
+                    break;
+                case 5:
+                    {
+                        //yellow
+                        rgb = new(255, 255, 0);
+                    }
+                    break;
+                case 6:
+                    {
+                        //purple
+                        rgb = new(130, 0, 255);
+                    }
+                    break;
+                case 7:
+                    {
+                        //pink
+                        rgb = new(255, 0, 255);
+                    }
+                    break;
+                default:
+                    {
+                        //black
+                        rgb = new(0, 0, 0);
+                    }
+                    break;
+            }
+
+
+            var color = System.Windows.Media.Color.FromScRgb(1,rgb.R, rgb.G, rgb.B);
+
+
+
+            return color;
+        }
+       
+       
+        public System.Windows.Media.Color GetColorFromSlider(int value,BitmapImage bitmapImage)
+        {
+            byte[] _ColorBuffer = new byte[4];
+            Int32Rect rect = new(value, 10, 1, 1);
+            bitmapImage.CopyPixels(rect,_ColorBuffer, 4, 0);
+            var color = System.Windows.Media.Color.FromArgb(_ColorBuffer[3], _ColorBuffer[2], _ColorBuffer[1], _ColorBuffer[0]);
+
+
+
+            return color;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Haley.WPF.Controls;
+using Microsoft.Win32;
 using QuickPen.Actions;
 using System.Diagnostics;
 using System.IO;
@@ -21,15 +22,21 @@ namespace QuickPen
         GlobalHotKey Q_Alt_HotKey;
         private DrawingAttributes _DrawingPen = SetInkCanvasMode.GetDefualtAttributes();
         private SetInkCanvasMode _InkCanvasMode = new();
+        private LetAppRunAtStartup _runatstartup = new();
+        public System.Windows.Media.Color _CurrentColor { get; set; }
         System.Drawing.Point WidthAndHeight;
+       
         public MainWindow()
         {
             InitializeComponent();
             DataContext = this;
 
             SourceInitialized += MainWindow_SourceInitialized;
-            WidthAndHeight = new() { X = SystemInformation.VirtualScreen.Width, Y = SystemInformation.VirtualScreen.Height };
 
+            _runatstartup.RegisterApp();
+
+            WidthAndHeight = new() { X = SystemInformation.VirtualScreen.Width, Y = SystemInformation.VirtualScreen.Height };
+            
             this.DrawCanvas.DefaultDrawingAttributes = _DrawingPen;
 
         }
@@ -97,6 +104,8 @@ namespace QuickPen
             finally { bmp.UnlockBits(data); }
             this.Visibility = Visibility.Visible;
         }
+
+
         private async Task<BitmapImage> BitmapToImageSource(System.Drawing.Bitmap bitmap)
         {
             using (MemoryStream memory = new MemoryStream())
@@ -112,6 +121,7 @@ namespace QuickPen
                 return bitmapimage;
             }
         }
+
 
 
 
@@ -169,6 +179,10 @@ namespace QuickPen
             this.Hide();
             EraserPop.IsOpen = false;
             this.BrushSizeSliderPopup.IsOpen = false;
+            Bitmap bitmap = new(30, 30);
+            using Graphics g = Graphics.FromImage(bitmap);
+            
+
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -217,13 +231,7 @@ namespace QuickPen
                 {
                     try
                     {
-                            _InkCanvasMode.ColorPicker.ShowDialog();
-
-                            var ARBG = _InkCanvasMode.ColorPicker.Color;
-                            var color = System.Windows.Media.Color.FromArgb
-                                (ARBG.A, ARBG.R, ARBG.G, ARBG.B);
-
-                            _InkCanvasMode.ChangeBrushColor(ref DrawCanvas, color);
+                            this.ChangeColorSlider.IsOpen = true;
                             _InkCanvasMode.ChangeInkCanvasModeToPen(ref DrawCanvas);
                             
                            
@@ -292,7 +300,7 @@ namespace QuickPen
                 }
  
             }
-        }
+        }  
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
@@ -329,6 +337,24 @@ namespace QuickPen
                 }
                 
             }
+            else if (slider == this.AllColorsSlider)
+            {
+                Debug.WriteLine(AllColorsSlider.Value);
+                //_CurrentColor =_InkCanvasMode.GetColorFromSlider((int)AllColorsSlider.Value);
+                BitmapImage RGBImage = (BitmapImage)this.RgbColorsImage.Source;
+                _CurrentColor = _InkCanvasMode.GetColorFromSlider((int)AllColorsSlider.Value, RGBImage);
+                
+                if(DrawCanvas!=null)
+                _InkCanvasMode.ChangeBrushColor(ref DrawCanvas, _CurrentColor);
+
+                this.Dispatcher.Invoke(() =>
+                {
+                   if(CurrentColorBorder!=null)
+                    this.CurrentColorBorder.Background = new SolidColorBrush(_CurrentColor);
+                });
+
+
+            }
 
         }
 
@@ -343,6 +369,10 @@ namespace QuickPen
                 if (this.EraserPop.IsMouseOver == false && this.EraserPop.IsOpen == true)
                 {
                     this.EraserPop.IsOpen = false;
+                }
+                if (this.ChangeColorSlider.IsMouseOver == false && this.ChangeColorSlider.IsOpen == true)
+                {
+                    this.ChangeColorSlider.IsOpen = false;
                 }
             }
         }
