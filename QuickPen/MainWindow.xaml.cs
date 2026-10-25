@@ -161,7 +161,7 @@ namespace QuickPen
                 this.SelectButton.IsChecked = false;
                 this.Highlighter.IsChecked = false;
                 this.ReBuildCanvas.IsChecked = false;
-                _InkCanvasMode._ColorPicker.ApplyTemplate();
+
                 if (UsePen.IsChecked == true)
                 {
                     _editmod.IsPen = true;

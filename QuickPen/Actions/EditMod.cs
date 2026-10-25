@@ -52,7 +52,10 @@ namespace QuickPen
     {
         Small,Medium,Large,VeryLarge
     }
-
+    public enum ErasingTypes
+    {
+        EraseByPoint,EraseByStroke
+    }
 
 
     public class SetInkCanvasMode
@@ -61,6 +64,7 @@ namespace QuickPen
         Color? LastColor;
         public ColorDialog ColorPicker;
         public Haley.WPF.Controls.ColorPickerButton _ColorPicker;
+        private BrushSize _brushsize =new();
 
         public SetInkCanvasMode()
         {
@@ -127,6 +131,68 @@ namespace QuickPen
                 inkCanvas.EditingMode = editMod.TypeOfTyping;
             }
         }
+        public void ChangeBrushColor(ref InkCanvas inkCanvas,Color color)
+        {
+            inkCanvas.DefaultDrawingAttributes.Color = color;
+        }
 
+        public void SetOrRemoveHighlightPen(ref InkCanvas inkCanvas, bool SetHighLightMode)
+        {
+            inkCanvas.DefaultDrawingAttributes.IsHighlighter = SetHighLightMode;
+        }
+
+        public void ChangeBrushToSelectMode(ref InkCanvas inkCanvas)
+        {
+            inkCanvas.EditingMode =InkCanvasEditingMode.Select;
+        }
+
+        public void ResetInkCanvas(ref InkCanvas inkCanvas)
+        {
+            inkCanvas.Strokes.Clear();
+        }
+        public void ChangeInkCanvasToEraserMode(ref InkCanvas inkCanvas ,ErasingTypes type)
+        {
+            if (type == ErasingTypes.EraseByPoint)
+            {
+                inkCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
+            }
+            else
+            {
+                inkCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
+            }
+        }
+        public void ChangeBrushSize(ref InkCanvas inkCanvas, BrushSizeType Size)
+        {
+            switch (Size)
+            {
+                case (BrushSizeType.Small):
+                    {
+                        inkCanvas.DefaultDrawingAttributes.Width =_brushsize.Small.Width;
+                        inkCanvas.DefaultDrawingAttributes.Height = _brushsize.Small.Height;
+
+                    }
+
+                    break;
+                case (BrushSizeType.Medium):
+                    {
+                        inkCanvas.DefaultDrawingAttributes.Width = _brushsize.Medium.Width;
+                        inkCanvas.DefaultDrawingAttributes.Height = _brushsize.Medium.Height;
+                    }
+                    break;
+                case (BrushSizeType.Large):
+                    {
+                        inkCanvas.DefaultDrawingAttributes.Width = _brushsize.Large.Width;
+                        inkCanvas.DefaultDrawingAttributes.Height = _brushsize.Large.Height;
+                    }
+                    break;
+                case (BrushSizeType.VeryLarge):
+                    {
+                        inkCanvas.DefaultDrawingAttributes.Width = _brushsize.VeryLarge.Width;
+                        inkCanvas.DefaultDrawingAttributes.Height = _brushsize.VeryLarge.Height;
+                    }
+                    break;
+            }
+            
+        }
     }
 }
