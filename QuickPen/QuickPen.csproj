@@ -7,7 +7,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>True</UseWindowsForms>
-    <ApplicationIcon>icons8-app-store-64.ico</ApplicationIcon>
+    <ApplicationIcon>icons8-paint-100.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="icons8-app-store-64.ico" />
+    <Content Include="icons8-paint-100.ico" />
   </ItemGroup>
 
   <ItemGroup>

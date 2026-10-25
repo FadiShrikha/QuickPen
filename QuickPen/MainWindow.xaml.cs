@@ -346,5 +346,13 @@ namespace QuickPen
                 }
             }
         }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            if (Q_Alt_HotKey != null)
+            {
+                Q_Alt_HotKey.Unregister();
+            }
+        }
     }
 }
