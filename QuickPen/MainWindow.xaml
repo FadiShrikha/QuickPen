@@ -101,12 +101,12 @@
                 </ToggleButton>
 
                 <ToggleButton  Name="UsePen" MouseDoubleClick="Btn_MouseDoubleClick" Click="Button_Click"  Style="{StaticResource ToggleButtonsStyle}" Tag="/Icons/icons8-paint-64.png" Margin="0,0,0,15" >
-                    <Popup Name="BrushSizeSliderPopup" AllowsTransparency="True" Width="160" Placement="MousePoint" Height="33" IsOpen="False" PopupAnimation="Slide">
-                        <Border CornerRadius="5" Background="Green" BorderBrush="Silver" BorderThickness="1.6" Height="25" Width="150"  Panel.ZIndex="4"  >
+                    <Popup Name="BrushSizeSliderPopup" AllowsTransparency="True" Width="160" Placement="MousePoint" Height="40" IsOpen="False" PopupAnimation="Slide">
+                        <Border CornerRadius="5" Background="Green" BorderBrush="Silver" BorderThickness="1.6" Height="40" Width="150"  Panel.ZIndex="4"  >
 
                             <Slider Name="BrushSizeSlider" Maximum="3" Value="0" 
-                                ValueChanged="Slider_ValueChanged" Width="150" Height="25"  IsSnapToTickEnabled="True"
-                                    VerticalAlignment="Center"  HorizontalAlignment="Center"     />
+                                ValueChanged="Slider_ValueChanged" Width="150" Height="30"  IsSnapToTickEnabled="True"
+                                    VerticalAlignment="Center"  HorizontalAlignment="Center"  TickPlacement="BottomRight"    />
 
                          
                         </Border>
