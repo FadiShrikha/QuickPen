@@ -14,8 +14,7 @@ namespace QuickPen
         public bool IsEraser;
         public InkCanvasEditingMode TypeOfTyping;
         public InkCanvasEditingMode EraseBy;
-        public BrushSizeType sizeOfBursh;
-        public BrushSize SetBrushSize;
+
         public System.Windows.Media.Color PenColor;
         public System.Windows.Media.Color? LastColor;
 
@@ -28,58 +27,20 @@ namespace QuickPen
             PenColor = Color.FromRgb(255, 255, 255);
             LastColor = null;
 
-            sizeOfBursh = BrushSizeType.Small;
-            SetBrushSize = new(sizeOfBursh);
         }
     }
 
-    public struct BrushSize
-    {
-        public Size Small;
-        public Size Medium;
-        public Size Large;
-        public Size VeryLarge;
-        public Size Defualtbrushsize;
-        public BrushSize(BrushSizeType brushSizeType)
-        {
-            Small = new(5, 5);
-            Medium = new(10, 10);
-            Large = new(20, 20);
-            VeryLarge = new(40, 40);
-            if (brushSizeType == BrushSizeType.Small) Defualtbrushsize = Small;
-            if (brushSizeType == BrushSizeType.Medium) Defualtbrushsize = Medium;
-            if (brushSizeType == BrushSizeType.Large) Defualtbrushsize = Large;
-            if (brushSizeType == BrushSizeType.VeryLarge) Defualtbrushsize = VeryLarge;
 
-        }
-    }
-    public enum BrushSizeType
-    {
-        Small, Medium, Large, VeryLarge
-    }
     public enum ErasingTypes
     {
         EraseByPoint, EraseByStroke
     }
 
-    public struct RGB
-    {
-        public float R, G, B;
-        public RGB(int r, int g, int b)
-        {
-            R = r;
-            G = g;
-            B = b;
-        }
-    }
 
     public class SetInkCanvasMode
     {
         public Color CurrentColor;
         Color? LastColor;
-
-
-        private BrushSize _brushsize = new(BrushSizeType.Medium);
 
         public SetInkCanvasMode()
         {
@@ -93,8 +54,8 @@ namespace QuickPen
             {
                 Color = editMod.PenColor,
                 IsHighlighter = editMod.IsHighlighter,
-                Width = editMod.SetBrushSize.Defualtbrushsize.Width,
-                Height = editMod.SetBrushSize.Defualtbrushsize.Height
+                Width = 5,
+                Height = 5
 
             };
 
@@ -111,26 +72,8 @@ namespace QuickPen
 
             drawingAttributes.IsHighlighter = editMod.IsHighlighter;
 
-            if (editMod.sizeOfBursh == BrushSizeType.Small)
-            {
-                drawingAttributes.Width = editMod.SetBrushSize.Small.Width;
-                drawingAttributes.Height = editMod.SetBrushSize.Small.Height;
-            }
-            if (editMod.sizeOfBursh == BrushSizeType.Medium)
-            {
-                drawingAttributes.Width = editMod.SetBrushSize.Medium.Width;
-                drawingAttributes.Height = editMod.SetBrushSize.Medium.Height;
-            }
-            if (editMod.sizeOfBursh == BrushSizeType.Large)
-            {
-                drawingAttributes.Width = editMod.SetBrushSize.Large.Width;
-                drawingAttributes.Height = editMod.SetBrushSize.Large.Height;
-            }
-            if (editMod.sizeOfBursh == BrushSizeType.VeryLarge)
-            {
-                drawingAttributes.Width = editMod.SetBrushSize.VeryLarge.Width;
-                drawingAttributes.Height = editMod.SetBrushSize.VeryLarge.Height;
-            }
+            drawingAttributes.Width = 5;
+            drawingAttributes.Height = 5;
 
         }
         public void ChangeCanvasBehave(ref InkCanvas inkCanvas, ref DrawingAttributes drawingAttributes, EditMod editMod)
@@ -219,24 +162,6 @@ namespace QuickPen
 
 
             return color;
-        }
-
-        public void ReAddLastStroke(ref InkCanvas inkCanvas,Stroke stroke )
-        {
-            if (inkCanvas.Strokes.All(f => f != stroke))
-            {
-                
-                inkCanvas.Strokes.Add(stroke);
-            }
-        }
-        public void DeleteLastStroke(ref InkCanvas inkCanvas ,ref StrokeCollection strokes)
-        {
-            var last = inkCanvas.Strokes.LastOrDefault();
-            if (last != null)
-            {
-                inkCanvas.Strokes.RemoveAt(inkCanvas.Strokes.IndexOf(last));
-                strokes.Add(last);
-            }
         }
     }
 }

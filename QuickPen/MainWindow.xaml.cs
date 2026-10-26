@@ -1,4 +1,5 @@
 ﻿using QuickPen.Actions;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,7 +23,8 @@ namespace QuickPen
         private LetAppRunAtStartup _runatstartup = new();
         public System.Windows.Media.Color _CurrentColor { get; set; }
         System.Drawing.Point WidthAndHeight;
-
+        List<StrokeCollection> _AddedStrokes = new();
+        List<StrokeCollection> _RemovedStrokes = new();
         public MainWindow()
         {
             InitializeComponent();
@@ -105,26 +107,6 @@ namespace QuickPen
             this.Visibility = Visibility.Visible;
         }
 
-
-        private async Task<BitmapImage> BitmapToImageSource(System.Drawing.Bitmap bitmap)
-        {
-            using (MemoryStream memory = new MemoryStream())
-            {
-                bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
-                memory.Position = 0;
-                BitmapImage bitmapimage = new BitmapImage();
-                bitmapimage.BeginInit();
-                bitmapimage.StreamSource = memory;
-                bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
-                bitmapimage.EndInit();
-                bitmapimage.Freeze();
-                return bitmapimage;
-            }
-        }
-
-
-
-
         private void Btn_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var Btn = sender as ToggleButton;
@@ -151,13 +133,9 @@ namespace QuickPen
 
         private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            if (e.Key == Key.Escape || e.Key == Key.Enter || e.Key == Key.Enter || e.Key == Key.LWin || e.Key == Key.RWin)
+            if (e.Key == Key.Escape || e.Key == Key.Space || e.Key == Key.Enter || e.Key==Key.Scroll || e.Key == Key.LWin || e.Key == Key.RWin)
             {
                 this.Hide();
-
-            }
-            if (this.Visibility == Visibility.Hidden)
-            {
                 EraserPop.IsOpen = false;
                 this.BrushSizeSliderPopup.IsOpen = false;
                 this.ChangeColorSliderPop.IsOpen = false;
@@ -171,9 +149,30 @@ namespace QuickPen
             EraserPop.IsOpen = false;
             this.BrushSizeSliderPopup.IsOpen = false;
             this.ChangeColorSliderPop.IsOpen = false;
+            DrawCanvas.Strokes.StrokesChanged += Strokes_StrokesChanged;
             SetCurrentColor();
             this.Hide();
 
+        }
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            if (Q_Alt_HotKey != null)
+            {
+                Q_Alt_HotKey.Unregister();
+            }
+        }
+
+        private void Strokes_StrokesChanged(object sender, StrokeCollectionChangedEventArgs e)
+        {
+
+            if (e.Added.Count > 0)
+            {
+                _AddedStrokes.Add(e.Added);
+            }
+            if (e.Removed.Count > 0)
+            {
+                _RemovedStrokes.Add(e.Removed);
+            }
         }
 
         private void Window_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -198,7 +197,6 @@ namespace QuickPen
                 this.SelectColor.IsChecked = false;
                 this.SelectButton.IsChecked = false;
                 this.Highlighter.IsChecked = false;
-                this.ReBuildCanvas.IsChecked = false;
                 this.UsePen.IsChecked = false;
             }
 
@@ -293,19 +291,10 @@ namespace QuickPen
                 }
 
             }
-            else if (btn == this.ReBuildCanvas)
-            {
 
-                if (ReBuildCanvas.IsChecked == true)
-                {
-                    _InkCanvasMode.ResetInkCanvas(ref DrawCanvas);
-                    _InkCanvasMode.ChangeInkCanvasModeToPen(ref DrawCanvas);
-                }
-
-            }
 
         }
-        StrokeCollection _DeletedStrokesContainer = new();
+
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             var slider = sender as Slider;
@@ -358,64 +347,48 @@ namespace QuickPen
             }
         }
 
-        private void Window_Closed(object sender, EventArgs e)
-        {
-            if (Q_Alt_HotKey != null)
-            {
-                Q_Alt_HotKey.Unregister();
-            }
-        }
 
-
-        private void DrawCanvas_StrokeErasing(object sender, InkCanvasStrokeErasingEventArgs e)
-        {
-            if (_DeletedStrokesContainer != null)
-            {
-                if (_DeletedStrokesContainer.All(f => f != e.Stroke))
-                {
-                    _DeletedStrokesContainer.Add(e.Stroke);
-                }
-            }
-        }
 
         private void ReDrawStroke_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as System.Windows.Controls.Button;
             if (btn == this.ReDrawStroke)
             {
-                if (_DeletedStrokesContainer != null && _DeletedStrokesContainer.Count > 0)
+                if (DrawCanvas.Strokes != null && _RemovedStrokes.Count>0)
                 {
-                    try
+    
+                     DrawCanvas.Strokes.Add(_RemovedStrokes.Last());
+
+                    _RemovedStrokes.RemoveAt(_RemovedStrokes.Count-1);
+                }
+            }
+            else if (btn == this.UnDoLastStroke)
+            {
+                if (DrawCanvas.Strokes != null && DrawCanvas.Strokes.Count > 0)
+                {
+                    if (_AddedStrokes.Count > 0 && _AddedStrokes.Count>0)
                     {
-                        var LastStroke = _DeletedStrokesContainer.LastOrDefault();
+                        var Stroke = _AddedStrokes.Last().LastOrDefault();
 
-                        if (LastStroke != null)
+                        if (DrawCanvas.Strokes.Any(f => f == Stroke))
                         {
-                            _InkCanvasMode.ReAddLastStroke(ref DrawCanvas, LastStroke);
-
-                            _DeletedStrokesContainer.RemoveAt(_DeletedStrokesContainer.IndexOf(LastStroke));
+                            DrawCanvas.Strokes.Remove(Stroke);
+                            _AddedStrokes.RemoveAt(_AddedStrokes.Count - 1); 
                         }
                     }
-                    finally
-                    {
-                        
-                    }
+
+                    
                 }
             }
-            if (btn == this.UnDoLastStroke)
+            else if (btn == this.ReBuildCanvas)
             {
-                if(DrawCanvas.Strokes!=null && DrawCanvas.Strokes.Count > 0)
-                {
-                    
-                    var Last = DrawCanvas.Strokes.Last();
-                    if ( _DeletedStrokesContainer!=null&&_DeletedStrokesContainer.All(f => f != Last))
-                    {
-                        _InkCanvasMode.DeleteLastStroke(ref DrawCanvas, ref _DeletedStrokesContainer);
-                    }
-                    
-                    
-                }
+
+                _InkCanvasMode.ResetInkCanvas(ref DrawCanvas);
+                _InkCanvasMode.ChangeInkCanvasModeToPen(ref DrawCanvas);
+                
+
             }
+
         }
     }
 }

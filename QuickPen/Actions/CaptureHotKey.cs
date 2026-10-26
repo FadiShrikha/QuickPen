@@ -10,7 +10,6 @@ namespace QuickPen.Actions
         private readonly int key;
         private readonly IntPtr handle;
         private readonly int id;
-        private const int oo = 0x0312;
 
         [DllImport("user32.dll")]
         private static extern bool RegisterHotKey(IntPtr hwnd, int id, int fsModifier, int vk);

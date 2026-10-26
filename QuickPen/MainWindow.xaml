@@ -100,7 +100,7 @@
         <Image  Name="Wallpaper"  Panel.ZIndex="0"/> 
 
 
-        <InkCanvas Name="DrawCanvas"  StrokeErasing="DrawCanvas_StrokeErasing"  Background="Transparent" Panel.ZIndex="1"/>    
+        <InkCanvas Name="DrawCanvas"   Background="Transparent" Panel.ZIndex="1"/>    
         
         <Border   Margin="0,250,0,0" Width="40" Panel.ZIndex="2"  BorderThickness="2" BorderBrush="AliceBlue" CornerRadius="5" Background="#FF062E03">
             <StackPanel Margin="0,-2,0,2">
@@ -143,7 +143,7 @@
                 <ToggleButton Name="SelectButton" Style="{StaticResource ToggleButtonsStyle}" IsChecked="False" Margin="0,0,0,15" Click="Button_Click" Tag="/Icons/icons8-selection-60.png"/>
                 <Button Name="ReDrawStroke" Style="{StaticResource  ButtonStyle}"  Margin="0,0,0,15" Click="ReDrawStroke_Click" Tag="/Icons/icons8-redo-64.png"/>
                 <Button Name="UnDoLastStroke" Style="{StaticResource  ButtonStyle}"  Margin="0,0,0,15" Click="ReDrawStroke_Click" Tag="/Icons/icons8-undo-64.png"/>
-                <ToggleButton Name="ReBuildCanvas" Style="{StaticResource ToggleButtonsStyle}" IsChecked="False" Margin="0,0,0,15" Click="Button_Click" Tag="/Icons/icons8-again-64.png"/>
+                <Button Name="ReBuildCanvas" Style="{StaticResource  ButtonStyle}" Margin="0,0,0,15" Click="ReDrawStroke_Click" Tag="/Icons/icons8-again-64.png"/>
             </StackPanel>
     </Border>
     </Canvas>
