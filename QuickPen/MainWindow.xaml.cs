@@ -21,6 +21,7 @@ namespace QuickPen
         private LetAppRunAtStartup _runatstartup = new();
         public System.Windows.Media.Color _CurrentColor { get; set; }
         System.Drawing.Point WidthAndHeight;
+
         List<StrokeCollection> _AddedStrokes = new();
         List<StrokeCollection> _RemovedStrokes = new();
         public MainWindow()
