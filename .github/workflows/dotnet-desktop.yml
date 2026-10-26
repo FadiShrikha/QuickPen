@@ -31,10 +31,12 @@ jobs:
 
     - name: Build
       run: dotnet build $env:Solution_Name --no-restore --configuration ${{ matrix.configuration }}
+
     - name: Publish
       run: dotnet publish QuickPen/QuickPen.csproj -c ${{ matrix.configuration }} -o publish
 
-    - uses: actions/upload-artifact@v4
-    with:
-    name: QuickPen-${{ matrix.configuration }}
-    path: publish
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: QuickPen-${{ matrix.configuration }}
+        path: publish
