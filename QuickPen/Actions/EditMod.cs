@@ -208,79 +208,6 @@ namespace QuickPen
             }
         }
 
-        public System.Windows.Media.Color GetColorFromSlider(int value)
-        {
-            RGB rgb = new(0, 0, 0);
-            switch (value)
-            {
-
-                case 0:
-                    {
-                        //black
-                        rgb = new(0, 0, 0);
-
-                    }
-                    break;
-                case 1:
-                    {
-                        //white
-                        rgb = new(255, 255, 255);
-                    }
-                    break;
-                case 2:
-                    {
-                        //red
-                        rgb = new(255, 0, 0);
-                    }
-                    break;
-                case 3:
-                    {
-                        //green
-                        rgb = new(0, 255, 0);
-                    }
-                    break;
-
-                case 4:
-                    {
-                        //orange
-                        rgb = new(255, 130, 0);
-
-                    }
-                    break;
-                case 5:
-                    {
-                        //yellow
-                        rgb = new(255, 255, 0);
-                    }
-                    break;
-                case 6:
-                    {
-                        //purple
-                        rgb = new(130, 0, 255);
-                    }
-                    break;
-                case 7:
-                    {
-                        //pink
-                        rgb = new(255, 0, 255);
-                    }
-                    break;
-                default:
-                    {
-                        //black
-                        rgb = new(0, 0, 0);
-                    }
-                    break;
-            }
-
-
-            var color = System.Windows.Media.Color.FromScRgb(1, rgb.R, rgb.G, rgb.B);
-
-
-
-            return color;
-        }
-
 
         public System.Windows.Media.Color GetColorFromSlider(int value, BitmapSource bitmapImage)
         {
@@ -292,6 +219,24 @@ namespace QuickPen
 
 
             return color;
+        }
+
+        public void ReAddLastStroke(ref InkCanvas inkCanvas,Stroke stroke )
+        {
+            if (inkCanvas.Strokes.All(f => f != stroke))
+            {
+                
+                inkCanvas.Strokes.Add(stroke);
+            }
+        }
+        public void DeleteLastStroke(ref InkCanvas inkCanvas ,ref StrokeCollection strokes)
+        {
+            var last = inkCanvas.Strokes.LastOrDefault();
+            if (last != null)
+            {
+                inkCanvas.Strokes.RemoveAt(inkCanvas.Strokes.IndexOf(last));
+                strokes.Add(last);
+            }
         }
     }
 }

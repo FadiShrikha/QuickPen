@@ -303,8 +303,9 @@ namespace QuickPen
                 }
 
             }
+
         }
-        StrokeCollection _DeletedStrokesContainer=new();
+        StrokeCollection _DeletedStrokesContainer = new();
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             var slider = sender as Slider;
@@ -368,7 +369,53 @@ namespace QuickPen
 
         private void DrawCanvas_StrokeErasing(object sender, InkCanvasStrokeErasingEventArgs e)
         {
-            _DeletedStrokesContainer.Add(e.Stroke);
+            if (_DeletedStrokesContainer != null)
+            {
+                if (_DeletedStrokesContainer.All(f => f != e.Stroke))
+                {
+                    _DeletedStrokesContainer.Add(e.Stroke);
+                }
+            }
+        }
+
+        private void ReDrawStroke_Click(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as System.Windows.Controls.Button;
+            if (btn == this.ReDrawStroke)
+            {
+                if (_DeletedStrokesContainer != null && _DeletedStrokesContainer.Count > 0)
+                {
+                    try
+                    {
+                        var LastStroke = _DeletedStrokesContainer.LastOrDefault();
+
+                        if (LastStroke != null)
+                        {
+                            _InkCanvasMode.ReAddLastStroke(ref DrawCanvas, LastStroke);
+
+                            _DeletedStrokesContainer.RemoveAt(_DeletedStrokesContainer.IndexOf(LastStroke));
+                        }
+                    }
+                    finally
+                    {
+                        
+                    }
+                }
+            }
+            if (btn == this.UnDoLastStroke)
+            {
+                if(DrawCanvas.Strokes!=null && DrawCanvas.Strokes.Count > 0)
+                {
+                    
+                    var Last = DrawCanvas.Strokes.Last();
+                    if ( _DeletedStrokesContainer!=null&&_DeletedStrokesContainer.All(f => f != Last))
+                    {
+                        _InkCanvasMode.DeleteLastStroke(ref DrawCanvas, ref _DeletedStrokesContainer);
+                    }
+                    
+                    
+                }
+            }
         }
     }
 }
