@@ -4,7 +4,6 @@ using System.Windows.Controls;
 using System.Windows.Ink;
 using System.Windows.Media.Imaging;
 using Color = System.Windows.Media.Color;
-using Size = System.Windows.Size;
 namespace QuickPen
 {
     public struct EditMod

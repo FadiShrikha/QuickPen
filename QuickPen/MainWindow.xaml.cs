@@ -1,6 +1,4 @@
 ﻿using QuickPen.Actions;
-using System.Diagnostics;
-using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -133,13 +131,12 @@ namespace QuickPen
 
         private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            if (e.Key == Key.Escape || e.Key == Key.Space || e.Key == Key.Enter || e.Key==Key.Scroll || e.Key == Key.LWin || e.Key == Key.RWin)
-            {
-                this.Hide();
-                EraserPop.IsOpen = false;
-                this.BrushSizeSliderPopup.IsOpen = false;
-                this.ChangeColorSliderPop.IsOpen = false;
-            }
+
+            this.Hide();
+            EraserPop.IsOpen = false;
+            this.BrushSizeSliderPopup.IsOpen = false;
+            this.ChangeColorSliderPop.IsOpen = false;
+
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -354,30 +351,30 @@ namespace QuickPen
             var btn = sender as System.Windows.Controls.Button;
             if (btn == this.ReDrawStroke)
             {
-                if (DrawCanvas.Strokes != null && _RemovedStrokes.Count>0)
+                if (DrawCanvas.Strokes != null && _RemovedStrokes.Count > 0)
                 {
-    
-                     DrawCanvas.Strokes.Add(_RemovedStrokes.Last());
 
-                    _RemovedStrokes.RemoveAt(_RemovedStrokes.Count-1);
+                    DrawCanvas.Strokes.Add(_RemovedStrokes.Last());
+
+                    _RemovedStrokes.RemoveAt(_RemovedStrokes.Count - 1);
                 }
             }
             else if (btn == this.UnDoLastStroke)
             {
                 if (DrawCanvas.Strokes != null && DrawCanvas.Strokes.Count > 0)
                 {
-                    if (_AddedStrokes.Count > 0 && _AddedStrokes.Count>0)
+                    if (_AddedStrokes.Count > 0 && _AddedStrokes.Count > 0)
                     {
                         var Stroke = _AddedStrokes.Last().LastOrDefault();
 
                         if (DrawCanvas.Strokes.Any(f => f == Stroke))
                         {
                             DrawCanvas.Strokes.Remove(Stroke);
-                            _AddedStrokes.RemoveAt(_AddedStrokes.Count - 1); 
+                            _AddedStrokes.RemoveAt(_AddedStrokes.Count - 1);
                         }
                     }
 
-                    
+
                 }
             }
             else if (btn == this.ReBuildCanvas)
@@ -385,7 +382,7 @@ namespace QuickPen
 
                 _InkCanvasMode.ResetInkCanvas(ref DrawCanvas);
                 _InkCanvasMode.ChangeInkCanvasModeToPen(ref DrawCanvas);
-                
+
 
             }
 
