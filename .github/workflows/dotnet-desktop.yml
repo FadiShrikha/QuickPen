@@ -56,7 +56,6 @@ jobs:
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
 
     env:
-    Configuration: Release
       Solution_Name: QuickPen.sln                         # Replace with your solution name, i.e. MyWpfApp.sln.
     steps:
     - name: Checkout
