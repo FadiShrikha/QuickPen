@@ -46,6 +46,25 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style TargetType="Button" x:Key="ButtonStyle">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate x:Name="ctrlTem"  TargetType="Button" >
+                        <Border x:Name="buttonborder" CornerRadius="10" Width="30" Height="30"  BorderThickness="1.6">
+                            <Image Source="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="buttonborder" Property="BorderBrush" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="False">
+                                <Setter TargetName="buttonborder" Property="BorderBrush" Value="#FF15600F"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <Style TargetType="ToggleButton" x:Key="EraserButtonStyle">
             <Setter Property="Template">
                 <Setter.Value>
@@ -81,34 +100,33 @@
         <Image  Name="Wallpaper"  Panel.ZIndex="0"/> 
 
 
-        <InkCanvas Name="DrawCanvas" Background="Transparent" Panel.ZIndex="1"/>    
+        <InkCanvas Name="DrawCanvas"  StrokeErasing="DrawCanvas_StrokeErasing" Background="Transparent" Panel.ZIndex="1"/>    
         
         <Border   Margin="0,250,0,0" Width="40" Panel.ZIndex="2"  BorderThickness="2" BorderBrush="AliceBlue" CornerRadius="5" Background="#FF062E03">
             <StackPanel Margin="0,-2,0,2">
-                <Border Name="CurrentColorBorder" Background="{Binding _CurrentColor}" BorderBrush="#FF15600F" Margin="0,10,0,15" CornerRadius="10" Width="30" Height="30"  BorderThickness="1.6" />
+                <Border Name="CurrentColorBorder" BorderBrush="#FF15600F" Margin="0,10,0,15" CornerRadius="10" Width="30" Height="30"  BorderThickness="1.6" />
                 <ToggleButton Name="SelectColor" Click="Button_Click"   Style="{StaticResource ToggleButtonsStyle}" Tag="/Icons/icons8-color-picker-64.png" Margin="0,0,0,15">
                     <Popup Name="ChangeColorSliderPop" IsOpen="False" Width="300" Height="55" AllowsTransparency="True" Placement="MousePoint">
-                        <Border Name="AllColorsBorder" CornerRadius="5" VerticalAlignment="Center" HorizontalAlignment="Center"
-                                Background="Green" BorderBrush="Silver" BorderThickness="1.6" Height="40" Width="210"  >
-                            <Canvas Width="200" Height="25" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <Image Name="RgbColorsImage" Source="/Icons/RGB_Allcolors.png" VerticalAlignment="Center" HorizontalAlignment="Center" Height="30" Width="200" Panel.ZIndex="0"/>
 
-                                <Slider Name="AllColorsSlider" Maximum="198" BorderBrush="AliceBlue" BorderThickness="2"  
-                                            Value="0" Height="30" Width="200" ValueChanged="Slider_ValueChanged" HorizontalAlignment="Center"  VerticalAlignment="Center"  />
-                            </Canvas>
-                        </Border>
+                        <Canvas Width="200" Height="25" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Image Name="RgbColorsImage" Source="/Icons/RGB_Allcolors.png" VerticalAlignment="Center" HorizontalAlignment="Center" Height="30" Width="200" Panel.ZIndex="0"/>
+
+                            <Slider Name="AllColorsSlider" Maximum="198" BorderBrush="AliceBlue" BorderThickness="2"  
+                                        Value="70" Height="30" Width="200" ValueChanged="Slider_ValueChanged" HorizontalAlignment="Center"  VerticalAlignment="Center"  />
+                        </Canvas>
+         
                     </Popup>
                 </ToggleButton>
 
                 <ToggleButton  Name="UsePen" MouseDoubleClick="Btn_MouseDoubleClick" Click="Button_Click"  Style="{StaticResource ToggleButtonsStyle}" Tag="/Icons/icons8-paint-64.png" Margin="0,0,0,15" >
-                    <Popup Name="BrushSizeSliderPopup" AllowsTransparency="True" Width="160" Placement="MousePoint" Height="40" IsOpen="False" PopupAnimation="Slide">
-                        <Border CornerRadius="5" Background="Green" BorderBrush="Silver" BorderThickness="1.6" Height="40" Width="150"  Panel.ZIndex="4"  >
-
-                            <Slider Name="BrushSizeSlider" Maximum="3" Value="0" 
-                                ValueChanged="Slider_ValueChanged" Width="150" Height="30"  IsSnapToTickEnabled="True"
-                                    VerticalAlignment="Center"  HorizontalAlignment="Center"  TickPlacement="BottomRight"    />
-
-                         
+                    <Popup Name="BrushSizeSliderPopup" AllowsTransparency="True" Width="200" Placement="MousePoint" Height="40" IsOpen="False">
+                        <Border CornerRadius="5" Background="Green" BorderBrush="Silver" BorderThickness="1.6" Height="40" Width="200" Panel.ZIndex="4"  >
+                            <StackPanel Orientation="Horizontal" Width="200" Height="40">
+                            <Slider Name="BrushSizeSlider" Maximum="100" Value="0" 
+                                ValueChanged="Slider_ValueChanged" Width="150" Height="30"  
+                                    VerticalAlignment="Center"  HorizontalAlignment="Center" TickPlacement="None"    />
+                                <TextBlock  VerticalAlignment="Center" Height="30" Margin="10,0,0,0" Foreground="White" Text="{Binding ElementName=BrushSizeSlider , Path=Value}"/>
+                            </StackPanel>
                         </Border>
                     </Popup>
                 </ToggleButton>
@@ -123,6 +141,7 @@
                 </ToggleButton>
                 <ToggleButton Name="Highlighter" Style="{StaticResource ToggleButtonsStyle}" IsChecked="False" Margin="0,0,0,15" Click="Button_Click" Tag="/Icons/icons8-marker-pen-48.png" />
                 <ToggleButton Name="SelectButton" Style="{StaticResource ToggleButtonsStyle}" IsChecked="False" Margin="0,0,0,15" Click="Button_Click" Tag="/Icons/icons8-selection-60.png"/>
+                <Button Name="ReDrawStroke" Style="{StaticResource  ButtonStyle}"  Margin="0,0,0,15" Click="Button_Click" Tag="/Icons/icons8-undo-64.png"/>
                 <ToggleButton Name="ReBuildCanvas" Style="{StaticResource ToggleButtonsStyle}" IsChecked="False" Margin="0,0,0,15" Click="Button_Click" Tag="/Icons/icons8-again-64.png"/>
             </StackPanel>
     </Border>

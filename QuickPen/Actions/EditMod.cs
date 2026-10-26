@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Ink;
 using System.Windows.Media.Imaging;
@@ -16,7 +17,7 @@ namespace QuickPen
         public BrushSizeType sizeOfBursh;
         public BrushSize SetBrushSize;
         public System.Windows.Media.Color PenColor;
-        public System.Windows.Media.Color? LastColor; 
+        public System.Windows.Media.Color? LastColor;
 
         public EditMod()
         {
@@ -26,7 +27,7 @@ namespace QuickPen
             EraseBy = InkCanvasEditingMode.EraseByStroke;
             PenColor = Color.FromRgb(255, 255, 255);
             LastColor = null;
-            
+
             sizeOfBursh = BrushSizeType.Small;
             SetBrushSize = new(sizeOfBursh);
         }
@@ -41,7 +42,7 @@ namespace QuickPen
         public Size Defualtbrushsize;
         public BrushSize(BrushSizeType brushSizeType)
         {
-            Small = new(5,5);
+            Small = new(5, 5);
             Medium = new(10, 10);
             Large = new(20, 20);
             VeryLarge = new(40, 40);
@@ -52,19 +53,19 @@ namespace QuickPen
 
         }
     }
-    public enum  BrushSizeType
+    public enum BrushSizeType
     {
-        Small,Medium,Large,VeryLarge
+        Small, Medium, Large, VeryLarge
     }
     public enum ErasingTypes
     {
         EraseByPoint, EraseByStroke
     }
 
-    public struct RGB 
+    public struct RGB
     {
         public float R, G, B;
-        public RGB(int r,int g,int b)
+        public RGB(int r, int g, int b)
         {
             R = r;
             G = g;
@@ -76,16 +77,12 @@ namespace QuickPen
     {
         public Color CurrentColor;
         Color? LastColor;
-        public ColorDialog ColorPicker;
-        public Haley.WPF.Controls.ColorPickerButton _ColorPicker;
-        private BrushSize _brushsize =new( BrushSizeType.Medium);
+
+
+        private BrushSize _brushsize = new(BrushSizeType.Medium);
 
         public SetInkCanvasMode()
         {
-            _ColorPicker = new() { Width = 40, Height = 40};
-            
-            ColorPicker = new() {  FullOpen=false,AllowFullOpen=false, ShowHelp=false , AnyColor=false, SolidColorOnly=true};
-            ColorPicker.FullOpen = false;
             CurrentColor = Color.FromRgb(255, 255, 255);
         }
         public static DrawingAttributes GetDefualtAttributes()
@@ -93,11 +90,14 @@ namespace QuickPen
             EditMod editMod = new();
 
             DrawingAttributes DefualtAtrribute = new()
-            {  Color=editMod.PenColor, IsHighlighter=editMod.IsHighlighter,Width=editMod.SetBrushSize.Defualtbrushsize.Width,
-                Height=editMod.SetBrushSize.Defualtbrushsize.Height
-            
+            {
+                Color = editMod.PenColor,
+                IsHighlighter = editMod.IsHighlighter,
+                Width = editMod.SetBrushSize.Defualtbrushsize.Width,
+                Height = editMod.SetBrushSize.Defualtbrushsize.Height
+
             };
-            
+
             return DefualtAtrribute;
         }
 
@@ -131,9 +131,9 @@ namespace QuickPen
                 drawingAttributes.Width = editMod.SetBrushSize.VeryLarge.Width;
                 drawingAttributes.Height = editMod.SetBrushSize.VeryLarge.Height;
             }
-            
+
         }
-        public void ChangeCanvasBehave(ref InkCanvas inkCanvas ,ref DrawingAttributes drawingAttributes, EditMod editMod)
+        public void ChangeCanvasBehave(ref InkCanvas inkCanvas, ref DrawingAttributes drawingAttributes, EditMod editMod)
         {
             SetNewBrushAttribute(ref drawingAttributes, editMod);
 
@@ -141,14 +141,14 @@ namespace QuickPen
             {
                 inkCanvas.EditingMode = editMod.EraseBy;
             }
-            
+
             else
             {
                 inkCanvas.DefaultDrawingAttributes = drawingAttributes;
                 inkCanvas.EditingMode = editMod.TypeOfTyping;
             }
         }
-        public void ChangeBrushColor(ref InkCanvas inkCanvas,Color color)
+        public void ChangeBrushColor(ref InkCanvas inkCanvas, Color color)
         {
             inkCanvas.DefaultDrawingAttributes.Color = color;
         }
@@ -167,14 +167,14 @@ namespace QuickPen
 
         public void ChangeBrushToSelectMode(ref InkCanvas inkCanvas)
         {
-            inkCanvas.EditingMode =InkCanvasEditingMode.Select;
+            inkCanvas.EditingMode = InkCanvasEditingMode.Select;
         }
 
         public void ResetInkCanvas(ref InkCanvas inkCanvas)
         {
             inkCanvas.Strokes.Clear();
         }
-        public void ChangeInkCanvasToEraserMode(ref InkCanvas inkCanvas ,ErasingTypes type)
+        public void ChangeInkCanvasToEraserMode(ref InkCanvas inkCanvas, ErasingTypes type)
         {
             if (type == ErasingTypes.EraseByPoint)
             {
@@ -185,39 +185,26 @@ namespace QuickPen
                 inkCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
             }
         }
-        public void ChangeBrushSize(ref InkCanvas inkCanvas, BrushSizeType Size)
+        public void ChangeBrushSize(ref InkCanvas inkCanvas, int Size)
         {
- 
-            switch (Size)
+            try
             {
-                case (BrushSizeType.Small):
-                    {
-                        inkCanvas.DefaultDrawingAttributes.Height = _brushsize.Small.Height;
-                        inkCanvas.DefaultDrawingAttributes.Width =_brushsize.Small.Width;
-
-                    }
-
-                    break;
-                case (BrushSizeType.Medium):
-                    {
-
-                        inkCanvas.DefaultDrawingAttributes.Height = _brushsize.Medium.Height;
-                        inkCanvas.DefaultDrawingAttributes.Width = _brushsize.Medium.Width;
-                       
-                    }
-                    break;
-                case (BrushSizeType.Large):
-                    {
-                        inkCanvas.DefaultDrawingAttributes.Width = _brushsize.Large.Width;
-                        inkCanvas.DefaultDrawingAttributes.Height = _brushsize.Large.Height;
-                    }
-                    break;
-                case (BrushSizeType.VeryLarge):
-                    {
-                        inkCanvas.DefaultDrawingAttributes.Width = _brushsize.VeryLarge.Width;
-                        inkCanvas.DefaultDrawingAttributes.Height = _brushsize.VeryLarge.Height;
-                    }
-                    break;
+                if (Size <= 0)
+                {
+                    inkCanvas.DefaultDrawingAttributes.Height = 1;
+                    inkCanvas.DefaultDrawingAttributes.Width = 1;
+                }
+                else if (Size >= 100)
+                {
+                    inkCanvas.DefaultDrawingAttributes.Height = 99;
+                    inkCanvas.DefaultDrawingAttributes.Width = 99;
+                }
+                inkCanvas.DefaultDrawingAttributes.Height = Size;
+                inkCanvas.DefaultDrawingAttributes.Width = Size;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message + " value was : " + Size);
             }
         }
 
@@ -226,18 +213,18 @@ namespace QuickPen
             RGB rgb = new(0, 0, 0);
             switch (value)
             {
-                 
+
                 case 0:
                     {
                         //black
-                        rgb=new(0,0,0);
-                        
+                        rgb = new(0, 0, 0);
+
                     }
                     break;
                 case 1:
                     {
                         //white
-                        rgb = new(255,255,255);
+                        rgb = new(255, 255, 255);
                     }
                     break;
                 case 2:
@@ -287,19 +274,19 @@ namespace QuickPen
             }
 
 
-            var color = System.Windows.Media.Color.FromScRgb(1,rgb.R, rgb.G, rgb.B);
+            var color = System.Windows.Media.Color.FromScRgb(1, rgb.R, rgb.G, rgb.B);
 
 
 
             return color;
         }
-       
-       
-        public System.Windows.Media.Color GetColorFromSlider(int value,BitmapSource bitmapImage)
+
+
+        public System.Windows.Media.Color GetColorFromSlider(int value, BitmapSource bitmapImage)
         {
             byte[] _ColorBuffer = new byte[4];
             Int32Rect rect = new(value, 10, 1, 1);
-            bitmapImage.CopyPixels(rect,_ColorBuffer, 4, 0);
+            bitmapImage.CopyPixels(rect, _ColorBuffer, 4, 0);
             var color = System.Windows.Media.Color.FromArgb(_ColorBuffer[3], _ColorBuffer[2], _ColorBuffer[1], _ColorBuffer[0]);
 
 

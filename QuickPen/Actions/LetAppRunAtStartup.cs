@@ -1,11 +1,8 @@
 ﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace QuickPen.Actions
 {
-    public  class LetAppRunAtStartup
+    public class LetAppRunAtStartup
     {
         readonly string? AppDirectory = Environment.ProcessPath;
         readonly string RegistryKeyPath = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run";
