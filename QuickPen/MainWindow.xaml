@@ -122,9 +122,9 @@
                     <Popup Name="BrushSizeSliderPopup" AllowsTransparency="True" Width="200" Placement="MousePoint" Height="40" IsOpen="False">
                         <Border CornerRadius="5" Background="Green" BorderBrush="Silver" BorderThickness="1.6" Height="40" Width="200" Panel.ZIndex="4"  >
                             <StackPanel Orientation="Horizontal" Width="200" Height="40">
-                            <Slider Name="BrushSizeSlider" Maximum="100" Value="0" 
-                                ValueChanged="Slider_ValueChanged" Width="150" Height="30"  
-                                    VerticalAlignment="Center"  HorizontalAlignment="Center" TickPlacement="None"    />
+                            <Slider Name="BrushSizeSlider" Maximum="30" Value="1" 
+                                ValueChanged="Slider_ValueChanged" Width="150" Height="30" IsSnapToTickEnabled="True"  
+                                    VerticalAlignment="Center"  HorizontalAlignment="Center" TickPlacement="TopLeft"    />
                                 <TextBlock  VerticalAlignment="Center" Height="30" Margin="10,0,0,0" Foreground="White" Text="{Binding ElementName=BrushSizeSlider , Path=Value}"/>
                             </StackPanel>
                         </Border>

@@ -366,13 +366,14 @@ namespace QuickPen
                 {
                     if (_AddedStrokes.Count > 0 && _AddedStrokes.Count > 0)
                     {
-                        var Stroke = _AddedStrokes.Last().LastOrDefault();
+                        var strokes = _AddedStrokes.Last();
 
-                        if (DrawCanvas.Strokes.Any(f => f == Stroke))
+                        if (DrawCanvas.Strokes != strokes)
                         {
-                            DrawCanvas.Strokes.Remove(Stroke);
+                            DrawCanvas.Strokes.Remove(strokes);
                             _AddedStrokes.RemoveAt(_AddedStrokes.Count - 1);
                         }
+                        
                     }
 
 
