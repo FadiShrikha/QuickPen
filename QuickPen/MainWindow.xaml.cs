@@ -94,7 +94,7 @@ namespace QuickPen
 
                 }
             }
-            else if (Btn == this.UsePen)
+            else if (Btn == this.UsePen || Btn==this.Highlighter)
             {
                 if (e.ChangedButton == MouseButton.Left)
                 {
@@ -154,7 +154,6 @@ namespace QuickPen
             if (btn?.IsChecked == true)
             {
                 this.UseEraser.IsChecked = false;
-                this.SelectColor.IsChecked = false;
                 this.SelectButton.IsChecked = false;
                 this.Highlighter.IsChecked = false;
                 this.UsePen.IsChecked = false;
@@ -163,7 +162,7 @@ namespace QuickPen
 
             btn?.IsChecked = true;
 
-            if (btn !=this.BackToCursor&&(_InkCanvasMode._CurrentCanvasState==InkCanvasState.CursorMode|| _InkCanvasMode._LastCanvasState == InkCanvasState.CursorMode))
+            if (btn !=this.BackToCursor)
             {
                BackToDrawState();
             }
@@ -190,26 +189,7 @@ namespace QuickPen
                     }
                 }
             }
-            else if (btn == this.SelectColor)
-            {
-                if (SelectColor.IsChecked == true)
-                    if (_InkCanvasMode != null)
-                    {
-                        try
-                        {
-                            this.ChangeColorSliderPop.IsOpen = true;
-                            _InkCanvasMode.ChangeInkCanvasModeToPen(ref DrawCanvas);
 
-
-
-                        }
-                        catch (Exception ex)
-                        {
-                            System.Windows.MessageBox.Show(ex.Message);
-                        }
-                    }
-
-            }
             else if (btn == this.EraseByPoint)
             {
                 if (EraseByPoint.IsChecked == false && EraseByStroke.IsChecked == false) EraseByPoint.IsChecked = true;
@@ -382,6 +362,21 @@ namespace QuickPen
                 _InkCanvasMode.ResetInkCanvas(ref DrawCanvas);
                 _InkCanvasMode.ChangeInkCanvasModeToPen(ref DrawCanvas);
 
+
+            }
+            else if (btn == this.SelectColor)
+            {
+                if (_InkCanvasMode != null)
+                {
+                    try
+                    {
+                        this.ChangeColorSliderPop.IsOpen = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Windows.MessageBox.Show(ex.Message);
+                    }
+                }
 
             }
 

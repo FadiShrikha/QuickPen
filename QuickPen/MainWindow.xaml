@@ -103,7 +103,7 @@
             <StackPanel Margin="0,-2,0,2">
                 <ToggleButton Name="BackToCursor" Style="{StaticResource  ToggleButtonsStyle}"  Margin="0,10,0,15" Click="Button_Click" Tag="/Icons/icons8-cursor-64.png"/>
                 <Border Name="CurrentColorBorder" BorderBrush="#FF15600F" Margin="0,0,0,15" CornerRadius="10" Width="30" Height="30"  BorderThickness="1.6" />
-                <ToggleButton Name="SelectColor" Click="Button_Click"   Style="{StaticResource ToggleButtonsStyle}" Tag="/Icons/icons8-color-picker-64.png" Margin="0,0,0,15">
+                <Button Name="SelectColor" Click="ReDrawStroke_Click"   Style="{StaticResource  ButtonStyle}" Tag="/Icons/icons8-color-picker-64.png" Margin="0,0,0,15">
                     <Popup Name="ChangeColorSliderPop" IsOpen="False" Width="300" Height="55" AllowsTransparency="True" Placement="MousePoint">
 
                         <Canvas Width="200" Height="25" VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -114,7 +114,7 @@
                         </Canvas>
          
                     </Popup>
-                </ToggleButton>
+                </Button>
 
                 <ToggleButton  Name="UsePen" MouseDoubleClick="Btn_MouseDoubleClick" Click="Button_Click"  Style="{StaticResource ToggleButtonsStyle}" Tag="/Icons/icons8-paint-64.png" Margin="0,0,0,15" >
                     <Popup Name="BrushSizeSliderPopup" AllowsTransparency="True" Width="200" Placement="MousePoint" Height="40" IsOpen="False">
@@ -137,7 +137,7 @@
                         </StackPanel>
                     </Popup>
                 </ToggleButton>
-                <ToggleButton Name="Highlighter" Style="{StaticResource ToggleButtonsStyle}" IsChecked="False" Margin="0,0,0,15" Click="Button_Click" Tag="/Icons/icons8-marker-pen-48.png" />
+                <ToggleButton Name="Highlighter" MouseDoubleClick="Btn_MouseDoubleClick" Style="{StaticResource ToggleButtonsStyle}" IsChecked="False" Margin="0,0,0,15" Click="Button_Click" Tag="/Icons/icons8-marker-pen-48.png" />
                 <ToggleButton Name="SelectButton" Style="{StaticResource ToggleButtonsStyle}" IsChecked="False" Margin="0,0,0,15" Click="Button_Click" Tag="/Icons/icons8-selection-60.png"/>
                 <Button Name="ReDrawStroke" Style="{StaticResource  ButtonStyle}"  Margin="0,0,0,15" Click="ReDrawStroke_Click" Tag="/Icons/icons8-redo-64.png"/>
                 <Button Name="UnDoLastStroke" Style="{StaticResource  ButtonStyle}"  Margin="0,0,0,15" Click="ReDrawStroke_Click" Tag="/Icons/icons8-undo-64.png"/>
