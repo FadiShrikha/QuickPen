@@ -7,22 +7,19 @@
         xmlns:hm="http://schemas.hpod9.com/haley/wpf"
         mc:Ignorable="d"
         
-        ResizeMode="NoResize"  WindowState="Maximized" Loaded="Window_Loaded" Background="Transparent"
+        ResizeMode="NoResize" AllowsTransparency="True" WindowState="Maximized" Loaded="Window_Loaded"  Background="Transparent"
         
-        MouseWheel="Window_MouseWheel" KeyDown="Window_KeyDown" Closed="Window_Closed" PreviewMouseDown="Window_MouseDown" WindowStyle="None" Topmost="True" >
+        MouseWheel="Window_MouseWheel"  Closed="Window_Closed" PreviewMouseDown="Window_MouseDown" WindowStyle="None" Topmost="True" >
     
     <Window.Resources>
         <Style TargetType="Border" x:Key="BorderStyle">
-            
+
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="BorderBrush" Value="White"/>
                 </Trigger>
-                
-            </Style.Triggers>
-        </Style>
-        <Style TargetType="Border" x:Key="BorderRGBStyle">
 
+            </Style.Triggers>
         </Style>
         <Style TargetType="ToggleButton" x:Key="ToggleButtonsStyle">
             <Setter Property="Template">
@@ -97,14 +94,15 @@
     <Canvas Name="MainCanvas">
 
 
-        <Image  Name="Wallpaper"  Panel.ZIndex="0"/> 
+        <Border  Name="Wallpaper" Background="#01000000"  IsHitTestVisible="False"  Panel.ZIndex="0"/> 
 
 
         <InkCanvas Name="DrawCanvas"   Background="Transparent" Panel.ZIndex="1"/>    
         
         <Border   Margin="0,250,0,0" Width="40" Panel.ZIndex="2"  BorderThickness="2" BorderBrush="AliceBlue" CornerRadius="5" Background="#FF062E03">
             <StackPanel Margin="0,-2,0,2">
-                <Border Name="CurrentColorBorder" BorderBrush="#FF15600F" Margin="0,10,0,15" CornerRadius="10" Width="30" Height="30"  BorderThickness="1.6" />
+                <ToggleButton Name="BackToCursor" Style="{StaticResource  ToggleButtonsStyle}"  Margin="0,10,0,15" Click="Button_Click" Tag="/Icons/icons8-cursor-64.png"/>
+                <Border Name="CurrentColorBorder" BorderBrush="#FF15600F" Margin="0,0,0,15" CornerRadius="10" Width="30" Height="30"  BorderThickness="1.6" />
                 <ToggleButton Name="SelectColor" Click="Button_Click"   Style="{StaticResource ToggleButtonsStyle}" Tag="/Icons/icons8-color-picker-64.png" Margin="0,0,0,15">
                     <Popup Name="ChangeColorSliderPop" IsOpen="False" Width="300" Height="55" AllowsTransparency="True" Placement="MousePoint">
 

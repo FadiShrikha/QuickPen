@@ -72,39 +72,16 @@ namespace QuickPen
                 }
                 else
                 {
-                    SetBackgraound();
+                    this.Show();
+                    BackToDrawState();
+                    this.Focus();
+                    _InkCanvasMode.SetLastState(ref DrawCanvas);
                 }
             }
 
             return IntPtr.Zero;
         }
-        private void SetBackgraound()
-        {
-            int w = WidthAndHeight.X, h = WidthAndHeight.Y;
-            using var bmp = new Bitmap(w, h, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
-            using var g = Graphics.FromImage(bmp);
 
-            g.CopyFromScreen(0, 0, 0, 0, new System.Drawing.Size(w, h));
-
-            var data = bmp.LockBits(new System.Drawing.Rectangle(0, 0, w, h),
-                System.Drawing.Imaging.ImageLockMode.ReadOnly, bmp.PixelFormat);
-            try
-            {
-                Dispatcher.Invoke(() =>
-                {
-                    if (_wb == null)
-                    {
-                        _wb = new WriteableBitmap(w, h, g.DpiX, g.DpiY, PixelFormats.Pbgra32, null);
-                        Wallpaper.Source = _wb;
-
-                    }
-                    _wb.WritePixels(new Int32Rect(0, 0, w, h), data.Scan0, data.Stride * h, data.Stride);
-
-                });
-            }
-            finally { bmp.UnlockBits(data); }
-            this.Visibility = Visibility.Visible;
-        }
 
         private void Btn_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
@@ -125,32 +102,21 @@ namespace QuickPen
 
                 }
             }
-
-
-
         }
-
-        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-
-            this.Hide();
-            EraserPop.IsOpen = false;
-            this.BrushSizeSliderPopup.IsOpen = false;
-            this.ChangeColorSliderPop.IsOpen = false;
-
-        }
-
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             DrawCanvas.Width = this.Width;
             DrawCanvas.Height = this.Height;
+            Wallpaper.Width = this.Width;
+            Wallpaper.Height = this.Height;
             EraserPop.IsOpen = false;
             this.BrushSizeSliderPopup.IsOpen = false;
             this.ChangeColorSliderPop.IsOpen = false;
+            this.Wallpaper.Opacity = 0;
             DrawCanvas.Strokes.StrokesChanged += Strokes_StrokesChanged;
             SetCurrentColor();
-            this.Hide();
-
+            BackToCursorState();
+            
         }
         private void Window_Closed(object sender, EventArgs e)
         {
@@ -175,20 +141,16 @@ namespace QuickPen
 
         private void Window_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-
-            this.Hide();
             EraserPop.IsOpen = false;
             this.BrushSizeSliderPopup.IsOpen = false;
-            Bitmap bitmap = new(30, 30);
-            using Graphics g = Graphics.FromImage(bitmap);
-
-
+            this.ChangeColorSliderPop.IsOpen = false;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-
+            
             var btn = sender as ToggleButton;
+
             if (btn?.IsChecked == true)
             {
                 this.UseEraser.IsChecked = false;
@@ -196,16 +158,21 @@ namespace QuickPen
                 this.SelectButton.IsChecked = false;
                 this.Highlighter.IsChecked = false;
                 this.UsePen.IsChecked = false;
+                this.BackToCursor.IsChecked = false;
             }
 
             btn?.IsChecked = true;
+
+            if (btn !=this.BackToCursor&&(_InkCanvasMode._CurrentCanvasState==InkCanvasState.CursorMode|| _InkCanvasMode._LastCanvasState == InkCanvasState.CursorMode))
+            {
+               BackToDrawState();
+            }
 
             if (btn == this.UsePen)
             {
                 if (UsePen.IsChecked == true)
                 {
                     _InkCanvasMode.ChangeInkCanvasModeToPen(ref DrawCanvas);
-
                 }
             }
             else if (btn == this.UseEraser)
@@ -289,8 +256,38 @@ namespace QuickPen
                 }
 
             }
+            else if (btn == this.BackToCursor)
+            {
+                if (btn.IsChecked == true)
+                {
+                  BackToCursorState();
+                }
+                
+            }
 
 
+
+        }
+        private void BackToCursorState()
+        {
+            if (_InkCanvasMode._CurrentCanvasState != InkCanvasState.CursorMode)
+            {
+                DrawCanvas.EditingMode = InkCanvasEditingMode.None;
+      
+
+                this.Wallpaper.Opacity = 0;
+                EraserPop.IsOpen = false;
+                this.BrushSizeSliderPopup.IsOpen = false;
+                this.ChangeColorSliderPop.IsOpen = false;
+
+                _InkCanvasMode._LastCanvasState = _InkCanvasMode._CurrentCanvasState;
+                _InkCanvasMode._CurrentCanvasState = InkCanvasState.CursorMode;
+            }
+
+        }
+        private void BackToDrawState()
+        {
+            this.Wallpaper.Opacity = 1;
         }
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
