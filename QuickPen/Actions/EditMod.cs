@@ -181,7 +181,7 @@ namespace QuickPen
 
 
             return color;
-        }
+        } 
 
         public void SetLastState(ref InkCanvas inkCanvas)
         {
