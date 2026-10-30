@@ -91,17 +91,37 @@
 
     </Window.Resources>
     
-    <Canvas Name="MainCanvas">
+    <Canvas Name="MainCanvas" AllowDrop="True" Drop="MainCanvasDrop" >
 
 
         <Border  Name="Wallpaper" Background="#01000000"  IsHitTestVisible="False"  Panel.ZIndex="0"/> 
 
 
-        <InkCanvas Name="DrawCanvas"   Background="Transparent" Panel.ZIndex="1"/>    
-        
-        <Border   Margin="0,250,0,0" Width="40" Panel.ZIndex="2"  BorderThickness="2" BorderBrush="AliceBlue" CornerRadius="5" Background="#FF062E03">
+        <InkCanvas Name="DrawCanvas"   Background="Transparent" Panel.ZIndex="1"/>
+
+        <Border x:Name="ItemsBorder" Canvas.Top="200"  
+                 Width="40" Panel.ZIndex="2"  BorderThickness="2" 
+                BorderBrush="AliceBlue"  CornerRadius="5" Background="#FF062E03">
             <StackPanel Margin="0,-2,0,2">
-                <ToggleButton Name="BackToCursor" Style="{StaticResource  ToggleButtonsStyle}"  Margin="0,10,0,15" Click="Button_Click" Tag="/Icons/icons8-cursor-64.png"/>
+                <Border Name="DragButton" CornerRadius="10" Width="30" Height="30"  BorderThickness="1.6"
+                        MouseMove="DragButton_MouseMove"   Margin="0,10,0,15">
+                    <Border.Background>
+                        <ImageBrush ImageSource="/Icons/icons8-drag-64.png"/>
+                    </Border.Background>
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="BorderBrush" Value="White"/>
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="False">
+                                    <Setter Property="BorderBrush" Value="#FF15600F"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                </Border>
+                <ToggleButton Name="BackToCursor" Style="{StaticResource  ToggleButtonsStyle}"  Margin="0,0,0,15" Click="Button_Click" Tag="/Icons/icons8-cursor-64.png"/>
                 <Border Name="CurrentColorBorder" BorderBrush="#FF15600F" Margin="0,0,0,15" CornerRadius="10" Width="30" Height="30"  BorderThickness="1.6" />
                 <Button Name="SelectColor" Click="ReDrawStroke_Click"   Style="{StaticResource  ButtonStyle}" Tag="/Icons/icons8-color-picker-64.png" Margin="0,0,0,15">
                     <Popup Name="ChangeColorSliderPop" IsOpen="False" Width="300" Height="55" AllowsTransparency="True" Placement="MousePoint">

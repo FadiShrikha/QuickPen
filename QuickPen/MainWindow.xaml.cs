@@ -1,4 +1,5 @@
 ﻿using QuickPen.Actions;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -6,7 +7,9 @@ using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
 namespace QuickPen
 {
@@ -109,9 +112,14 @@ namespace QuickPen
             DrawCanvas.Height = this.Height;
             Wallpaper.Width = this.Width;
             Wallpaper.Height = this.Height;
+
             EraserPop.IsOpen = false;
             this.BrushSizeSliderPopup.IsOpen = false;
             this.ChangeColorSliderPop.IsOpen = false;
+
+
+
+
             this.Wallpaper.Opacity = 0;
             DrawCanvas.Strokes.StrokesChanged += Strokes_StrokesChanged;
             SetCurrentColor();
@@ -252,7 +260,6 @@ namespace QuickPen
         {
             if (_InkCanvasMode._CurrentCanvasState != InkCanvasState.CursorMode)
             {
-                DrawCanvas.EditingMode = InkCanvasEditingMode.None;
       
 
                 this.Wallpaper.Opacity = 0;
@@ -260,14 +267,25 @@ namespace QuickPen
                 this.BrushSizeSliderPopup.IsOpen = false;
                 this.ChangeColorSliderPop.IsOpen = false;
 
+                this.UseEraser.IsChecked = false;
+                this.SelectButton.IsChecked = false;
+                this.Highlighter.IsChecked = false;
+                this.UsePen.IsChecked = false;
+                this.BackToCursor.IsChecked = true;
+
+
+                DrawCanvas.EditingMode = InkCanvasEditingMode.None;
                 _InkCanvasMode._LastCanvasState = _InkCanvasMode._CurrentCanvasState;
                 _InkCanvasMode._CurrentCanvasState = InkCanvasState.CursorMode;
+                _IsCursorState = true;
             }
 
         }
+        bool _IsCursorState = false;
         private void BackToDrawState()
         {
             this.Wallpaper.Opacity = 1;
+            _IsCursorState=false;
         }
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -380,6 +398,32 @@ namespace QuickPen
 
             }
 
+        }
+
+        double wallopacity;
+        private void MainCanvasDrop(object sender, System.Windows.DragEventArgs e)
+        {
+            var location = e.GetPosition(MainCanvas);
+            
+            Canvas.SetLeft(ItemsBorder, location.X );
+            Canvas.SetTop(ItemsBorder, location.Y );
+       
+            Wallpaper.Opacity = wallopacity;
+        }
+
+
+
+        private void DragButton_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                wallopacity = Wallpaper.Opacity;
+                if (wallopacity== 0)
+                {
+                    Wallpaper.Opacity = 1;
+                }
+                DragDrop.DoDragDrop(sender as Border, sender, System.Windows.DragDropEffects.All);
+            }
         }
     }
 }
