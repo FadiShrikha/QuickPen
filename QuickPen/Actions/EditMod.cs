@@ -37,7 +37,7 @@ namespace QuickPen
 
     public enum InkCanvasState
     {
-        Pen,Eraser,Select,Highlighter,colorchange,CursorMode
+        Pen, Eraser, Select, Highlighter, colorchange, CursorMode
     }
     public class SetInkCanvasMode
     {
@@ -184,7 +184,7 @@ namespace QuickPen
         }
         public void SetLastState(ref InkCanvas inkCanvas)
         {
-            if(_CurrentCanvasState !=null && _LastCanvasState != null)
+            if (_CurrentCanvasState != null && _LastCanvasState != null)
             {
                 switch (_LastCanvasState)
                 {
@@ -195,7 +195,7 @@ namespace QuickPen
                         break;
                     case InkCanvasState.Highlighter:
                         {
-                            SetOrRemoveHighlightPen(ref inkCanvas,true);
+                            SetOrRemoveHighlightPen(ref inkCanvas, true);
                         }
                         break;
                     case InkCanvasState.Select:
@@ -205,7 +205,7 @@ namespace QuickPen
                         break;
                     case InkCanvasState.Eraser:
                         {
-                            ChangeInkCanvasToEraserMode(ref inkCanvas,ErasingTypes.EraseByStroke);
+                            ChangeInkCanvasToEraserMode(ref inkCanvas, ErasingTypes.EraseByStroke);
                         }
                         break;
                     case InkCanvasState.CursorMode:
