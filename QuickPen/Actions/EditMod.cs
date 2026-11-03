@@ -44,7 +44,7 @@ namespace QuickPen
         public Color CurrentColor;
         Color? LastColor;
         public InkCanvasState? _CurrentCanvasState;
-        public InkCanvasState? _LastCanvasState;
+
         public SetInkCanvasMode()
         {
             CurrentColor = Color.FromRgb(255, 255, 255);
@@ -99,7 +99,7 @@ namespace QuickPen
         public void ChangeBrushColor(ref InkCanvas inkCanvas, Color color)
         {
             inkCanvas.DefaultDrawingAttributes.Color = color;
-            _LastCanvasState = _CurrentCanvasState;
+
             _CurrentCanvasState = InkCanvasState.colorchange;
         }
 
@@ -108,7 +108,6 @@ namespace QuickPen
             inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
             inkCanvas.DefaultDrawingAttributes.IsHighlighter = false;
 
-            _LastCanvasState = _CurrentCanvasState;
             _CurrentCanvasState = InkCanvasState.Pen;
         }
 
@@ -117,7 +116,6 @@ namespace QuickPen
             inkCanvas.DefaultDrawingAttributes.IsHighlighter = SetHighLightMode;
             inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
 
-            _LastCanvasState = _CurrentCanvasState;
             _CurrentCanvasState = InkCanvasState.Highlighter;
         }
 
@@ -125,7 +123,6 @@ namespace QuickPen
         {
             inkCanvas.EditingMode = InkCanvasEditingMode.Select;
 
-            _LastCanvasState = _CurrentCanvasState;
             _CurrentCanvasState = InkCanvasState.Select;
         }
 
@@ -143,8 +140,6 @@ namespace QuickPen
             {
                 inkCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
             }
-
-            _LastCanvasState = _CurrentCanvasState;
             _CurrentCanvasState = InkCanvasState.Eraser;
         }
         public void ChangeBrushSize(ref InkCanvas inkCanvas, int Size)
@@ -185,9 +180,9 @@ namespace QuickPen
 
         public void SetLastState(ref InkCanvas inkCanvas)
         {
-            if (_CurrentCanvasState != null && _LastCanvasState != null)
+            if (_CurrentCanvasState != null)
             {
-                switch (_LastCanvasState)
+                switch (_CurrentCanvasState)
                 {
                     case InkCanvasState.Pen:
                         {
@@ -214,6 +209,27 @@ namespace QuickPen
                             inkCanvas.EditingMode = InkCanvasEditingMode.None;
                         }
                         break;
+                }
+            }
+        }
+        public void Undo(ref InkCanvas inkCanvas, StrokeCollection strokes)
+        {
+            foreach(var S in strokes)
+            {
+                if (inkCanvas.Strokes.Any(f => f == S))
+                {
+                    inkCanvas.Strokes.Remove(strokes);
+                }
+            }
+        }
+        public void Redo(ref InkCanvas inkCanvas, StrokeCollection strokes)
+        {
+
+            foreach (var S in strokes)
+            {
+                if (inkCanvas.Strokes.All(f => f != S))
+                {
+                    inkCanvas.Strokes.Add(strokes);
                 }
             }
         }

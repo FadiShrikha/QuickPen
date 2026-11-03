@@ -23,6 +23,7 @@ namespace QuickPen.Actions
         {
             this.key = (int)key;
             this.handle = handle;
+            this.id = id;
             this.Modifier = 0;
             if (modifiers.HasFlag(Keys.Alt)) this.Modifier = Alt_Key;
         }

@@ -8,6 +8,7 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>True</UseWindowsForms>
     <ApplicationIcon>icons8-paint-100.ico</ApplicationIcon>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,6 +17,7 @@
     <None Remove="Icons\icons8-color-picker-64.png" />
     <None Remove="Icons\icons8-cursor-64.png" />
     <None Remove="Icons\icons8-drag-64.png" />
+    <None Remove="Icons\icons8-erase-64.png" />
     <None Remove="Icons\icons8-eraser-24.png" />
     <None Remove="Icons\icons8-marker-pen-48.png" />
     <None Remove="Icons\icons8-paint-64.png" />
@@ -35,6 +37,7 @@
     <Resource Include="Icons\icons8-color-picker-64.png" />
     <Resource Include="Icons\icons8-cursor-64.png" />
     <Resource Include="Icons\icons8-drag-64.png" />
+    <Resource Include="Icons\icons8-erase-64.png" />
     <Resource Include="Icons\icons8-eraser-24.png" />
     <Resource Include="Icons\icons8-marker-pen-48.png" />
     <Resource Include="Icons\icons8-paint-64.png" />

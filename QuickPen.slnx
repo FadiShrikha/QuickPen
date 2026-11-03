@@ -1,3 +1,18 @@
 <Solution>
-  <Project Path="QuickPen/QuickPen.csproj" />
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="ARM" />
+    <Platform Name="ARM64" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="QuickPen/QuickPen.csproj">
+    <BuildType Solution="Debug|Any CPU" Project="Release" />
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+  <Project Path="QuickPenInstaller/QuickPenInstaller.wapproj" Type="c7167f0d-bc9f-4e6e-afe1-012c56b48db5" Id="7cbb36f2-0908-40f8-b869-fad92c2286cf">
+    <BuildType Solution="Debug|x64" Project="Release" />
+    <Build Solution="Debug|x64" Project="false" />
+    <Deploy />
+  </Project>
 </Solution>
