@@ -19,11 +19,11 @@ namespace QuickPen.Actions
 
         private const int Alt_Key = 0x1;
 
-        public GlobalHotKey(Keys key, Keys modifiers, IntPtr handle, int id)
+        public GlobalHotKey(Keys key, Keys modifiers, IntPtr handle, TypeOfHotKeyRegister id)
         {
             this.key = (int)key;
             this.handle = handle;
-            this.id = id;
+            this.id = (int)id;
             this.Modifier = 0;
             if (modifiers.HasFlag(Keys.Alt)) this.Modifier = Alt_Key;
         }
@@ -36,7 +36,13 @@ namespace QuickPen.Actions
 
 
     }
-
+    public enum TypeOfHotKeyRegister : uint
+    {
+        ClearAll=1,
+        HideAndShow=2,
+        Redo=3,
+        Undo=4
+    }
     public enum WindowMessage : uint
     {
         WM_HotKey = 0x0312,

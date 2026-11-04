@@ -1,5 +1,6 @@
 ﻿using QuickPen.Actions;
 using System.Diagnostics;
+using System.Drawing.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -17,7 +18,11 @@ namespace QuickPen
     /// </summary>
     public partial class MainWindow : Window
     {
-        GlobalHotKey Q_Alt_HotKey;
+        GlobalHotKey HideShowWindow;
+        GlobalHotKey ClearAllHotkey;
+        GlobalHotKey RedoHotKey;
+        GlobalHotKey UndoHotKey;
+
         private DrawingAttributes _DrawingPen = SetInkCanvasMode.GetDefualtAttributes();
         private SetInkCanvasMode _InkCanvasMode = new();
         private LetAppRunAtStartup _runatstartup = new();
@@ -48,9 +53,14 @@ namespace QuickPen
 
 
             var handle = new WindowInteropHelper(this).Handle;
-
-            Q_Alt_HotKey = new GlobalHotKey(Keys.Q, Keys.Alt, handle, GetHashCode());
-            Q_Alt_HotKey.register();
+            ClearAllHotkey = new GlobalHotKey(Keys.C, Keys.Alt, handle, TypeOfHotKeyRegister.ClearAll);
+            HideShowWindow = new GlobalHotKey(Keys.Q, Keys.Alt, handle, TypeOfHotKeyRegister.HideAndShow);
+            RedoHotKey = new GlobalHotKey(Keys.Z, Keys.Alt, handle, TypeOfHotKeyRegister.Redo);
+            UndoHotKey = new GlobalHotKey(Keys.X, Keys.Alt, handle, TypeOfHotKeyRegister.Undo);
+            ClearAllHotkey.register();
+            HideShowWindow.register();
+            UndoHotKey.register();
+            RedoHotKey.register();
 
         }
 
@@ -61,18 +71,34 @@ namespace QuickPen
             var MSG = (WindowMessage)msg;
             if (MSG == WindowMessage.WM_HotKey)
             {
-
-
-                if (this.IsVisible)
+                var id = wParam.ToInt32();
+                var TypeHotkey = (TypeOfHotKeyRegister)id;
+                if (TypeHotkey == TypeOfHotKeyRegister.HideAndShow)
                 {
-                    this.BrushSizeSliderPopup.IsOpen = false;
-                    this.ChangeColorSliderPop.IsOpen = false;
-                    this.Hide();
+                    if (this.IsVisible)
+                    {
+                        this.BrushSizeSliderPopup.IsOpen = false;
+                        this.ChangeColorSliderPop.IsOpen = false;
+                        this.Hide();
+                    }
+                    else
+                    {
+                        this.Show();
+                    }
                 }
-                else
+                if (TypeHotkey == TypeOfHotKeyRegister.ClearAll)
                 {
-                    this.Show();
+                    _InkCanvasMode.ResetInkCanvas(ref DrawCanvas);
                 }
+                if (TypeHotkey == TypeOfHotKeyRegister.Redo)
+                {
+                    ManageRedo();
+                }
+                if (TypeHotkey == TypeOfHotKeyRegister.Undo)
+                {
+                    ManageUndo();
+                }
+
             }
 
             return IntPtr.Zero;
@@ -112,9 +138,21 @@ namespace QuickPen
         }
         private void Window_Closed(object sender, EventArgs e)
         {
-            if (Q_Alt_HotKey != null)
+            if (HideShowWindow != null)
             {
-                Q_Alt_HotKey.Unregister();
+                HideShowWindow.Unregister();
+            }
+            if (UndoHotKey != null)
+            {
+                UndoHotKey.Unregister();
+            }
+            if (RedoHotKey != null)
+            {
+                RedoHotKey.Unregister();
+            }
+            if (ClearAllHotkey != null)
+            {
+                ClearAllHotkey.Unregister();
             }
         }
 
@@ -282,44 +320,51 @@ namespace QuickPen
                 }
             }
         }
+        private void ManageUndo()
+        {
+            if (DrawCanvas.Strokes != null && _RemovedStrokes.Count > 0)
+            {
 
+                DrawCanvas.Strokes.Add(_RemovedStrokes.Last());
 
+                _RemovedStrokes.RemoveAt(_RemovedStrokes.Count - 1);
+            }
+        }
+        private void ManageRedo()
+        {
 
+            if (DrawCanvas.Strokes != null && _AddedStrokes.Count > 0)
+            {
+
+                var strokes = _AddedStrokes.Last();
+
+                if (DrawCanvas.Strokes != null)
+                {
+                    _InkCanvasMode.Undo(ref DrawCanvas, strokes);
+                    _AddedStrokes.RemoveAt(_AddedStrokes.Count - 1);
+                }
+
+            }
+        }
+        private void ManageResetCanva()
+        {
+
+            _InkCanvasMode.ResetInkCanvas(ref DrawCanvas);
+        }
         private void ReDrawStroke_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as System.Windows.Controls.Button;
             if (btn == this.ReDrawStroke)
             {
-                if (DrawCanvas.Strokes != null && _RemovedStrokes.Count > 0)
-                {
-
-                    DrawCanvas.Strokes.Add(_RemovedStrokes.Last());
-
-                    _RemovedStrokes.RemoveAt(_RemovedStrokes.Count - 1);
-                }
+                ManageRedo();
             }
             else if (btn == this.UnDoLastStroke)
             {
-                if (DrawCanvas.Strokes != null && _AddedStrokes.Count > 0)
-                {
-
-                    var strokes = _AddedStrokes.Last();
-
-                    if (DrawCanvas.Strokes != null)
-                    {
-                        _InkCanvasMode.Undo(ref DrawCanvas, strokes);
-                        //DrawCanvas.Strokes.Remove(strokes);
-                        _AddedStrokes.RemoveAt(_AddedStrokes.Count - 1);
-                    }
-
-                }
+                ManageUndo();
             }
             else if (btn == this.ReBuildCanvas)
             {
-
-                _InkCanvasMode.ResetInkCanvas(ref DrawCanvas);
-                _InkCanvasMode.ChangeInkCanvasModeToPen(ref DrawCanvas);
-
+                ManageResetCanva();
 
             }
             else if (btn == this.SelectColor)
