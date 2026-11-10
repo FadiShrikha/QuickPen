@@ -214,11 +214,13 @@ namespace QuickPen
         }
         public void Undo(ref InkCanvas inkCanvas, StrokeCollection strokes)
         {
+
             foreach(var S in strokes)
             {
+               
                 if (inkCanvas.Strokes.Any(f => f == S))
                 {
-                    inkCanvas.Strokes.Remove(strokes);
+                    inkCanvas.Strokes.Remove(S);
                 }
             }
         }

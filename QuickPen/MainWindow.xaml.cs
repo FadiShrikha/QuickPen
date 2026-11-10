@@ -25,9 +25,8 @@ namespace QuickPen
 
         private DrawingAttributes _DrawingPen = SetInkCanvasMode.GetDefualtAttributes();
         private SetInkCanvasMode _InkCanvasMode = new();
-        private LetAppRunAtStartup _runatstartup = new();
         public System.Windows.Media.Color _CurrentColor { get; set; }
-        System.Drawing.Point WidthAndHeight;
+    
 
         List<StrokeCollection> _AddedStrokes = new();
         List<StrokeCollection> _RemovedStrokes = new();
@@ -38,9 +37,7 @@ namespace QuickPen
 
             SourceInitialized += MainWindow_SourceInitialized;
 
-            _runatstartup.RegisterApp();
-
-            WidthAndHeight = new() { X = SystemInformation.VirtualScreen.Width, Y = SystemInformation.VirtualScreen.Height };
+          
 
             this.DrawCanvas.DefaultDrawingAttributes = _DrawingPen;
 

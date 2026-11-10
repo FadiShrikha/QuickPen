@@ -16,7 +16,10 @@
 
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="BorderBrush" Value="White"/>
+                    <Setter  Property="Background" Value="#6476FD"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="False">
+                    <Setter  Property="Background" Value="Transparent"/>
                 </Trigger>
 
             </Style.Triggers>
@@ -25,18 +28,18 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate x:Name="ctrlTem"  TargetType="ToggleButton" >
-                        <Border x:Name="buttonborder" CornerRadius="10" Width="30" Height="30"  BorderThickness="1.6">
+                        <Border x:Name="buttonborder" CornerRadius="10" Width="30" Height="30">
                             <Image Source="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="buttonborder" Property="BorderBrush" Value="White"/>
+                                <Setter TargetName="buttonborder" Property="Background" Value="#6476FD"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="False">
-                                <Setter TargetName="buttonborder" Property="BorderBrush" Value="#FFFF1AD5"/>
+                                <Setter TargetName="buttonborder" Property="Background" Value="Transparent"/>
                             </Trigger>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="buttonborder" Property="BorderBrush" Value="White"/>
+                                <Setter TargetName="buttonborder" Property="Background" Value="#6476FD"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -52,10 +55,10 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="buttonborder" Property="BorderBrush" Value="White"/>
+                                <Setter TargetName="buttonborder" Property="Background" Value="#6476FD"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="False">
-                                <Setter TargetName="buttonborder" Property="BorderBrush" Value="#FFFF1AD5"/>
+                                <Setter TargetName="buttonborder" Property="Background" Value="Transparent"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -108,68 +111,54 @@
                 </Style>
             </Border.Style>
         </Border>
-
-
         <InkCanvas Name="DrawCanvas"   Background="Transparent" Panel.ZIndex="1"/>
-
-        <Border x:Name="ItemsBorder" Canvas.Top="200"  
-                 Width="40" Panel.ZIndex="2"  BorderThickness="3" 
-                BorderBrush="#FF500000"  CornerRadius="5" Background="#FF080B52">
-            <StackPanel Margin="0,-2,0,2">
-                <Border Name="DragButton" ToolTip="drag" CornerRadius="10" Width="30" Height="30"  BorderThickness="1.6"
-                        MouseMove="DragButton_MouseMove"   Margin="0,10,0,15">
+        <Border  x:Name="ItemsBorder" Canvas.Top="200" MouseMove="DragButton_MouseMove"   
+                 Width="40" Panel.ZIndex="2"  BorderThickness="0.6" 
+                BorderBrush="White"  CornerRadius="10" Background="#1F2025">
+            <StackPanel>
+                <!--Header-->
+                <Border CornerRadius="10" Width="30" Height="30" Style="{StaticResource BorderStyle}">
                     <Border.Background>
-                        <ImageBrush ImageSource="/Icons/icons8-drag-64.png"/>
+                        <ImageBrush ImageSource="/ModernIcons/grip-horizontal.png"/>
                     </Border.Background>
-                    <Border.Style>
-                        <Style TargetType="Border">
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="BorderBrush" Value="White"/>
-                                </Trigger>
-                                <Trigger Property="IsMouseOver" Value="False">
-                                    <Setter Property="BorderBrush" Value="#FFFF1AD5"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Border.Style>
                 </Border>
-                <ToggleButton Name="BackToCursor" ToolTip="use mouse" Style="{StaticResource  ToggleButtonsStyle}"  Margin="0,0,0,15" Click="Button_Click" Tag="/Icons/icons8-cursor-64.png"/>
-                <Border Name="CurrentColorBorder" ToolTip="current color" BorderBrush="#FFFF1AD5" Margin="0,0,0,15" CornerRadius="10" Width="30" Height="30"  BorderThickness="1.6" />
-                <Button Name="SelectColor" ToolTip="color slider" Click="ReDrawStroke_Click"   Style="{StaticResource  ButtonStyle}" Tag="/Icons/icons8-color-picker-64.png" Margin="0,0,0,15">
-                    <Popup Name="ChangeColorSliderPop" IsOpen="False" Width="300" Height="55" AllowsTransparency="True" Placement="MousePoint">
+               <!--spaceline-->
+                <Line Stroke="White" StrokeThickness="1" Fill="White" Width="20" Height="1" Margin="0,0,0,20" />
+                <!--UseMouse-->
+                <ToggleButton Name="BackToCursor" ToolTip="use mouse" Style="{StaticResource  ToggleButtonsStyle}" 
+                              Margin="0,0,0,15" Click="Button_Click" Tag="/ModernIcons/pointer.png"/>
+                <!--UsePen-->
+                <ToggleButton  Name="UsePen" ToolTip="pen"  Click="Button_Click" 
+                               Style="{StaticResource ToggleButtonsStyle}" Tag="/ModernIcons/pencil.png" Margin="0,0,0,15"/>
+                <!--UseHighlighter-->
+                <ToggleButton Name="Highlighter" ToolTip="highlighter"  Style="{StaticResource ToggleButtonsStyle}" 
+                              IsChecked="False" Margin="0,0,0,15" Click="Button_Click" Tag="/ModernIcons/highlight.png" />
 
-                        <Canvas Width="200" Height="25" VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <Image Name="RgbColorsImage" Source="/Icons/RGB_Allcolors.png" VerticalAlignment="Center" HorizontalAlignment="Center" Height="30" Width="200" Panel.ZIndex="0"/>
+                <!--Eraser-->
+                <ToggleButton Name="UseEraser" ToolTip="eraser" MouseDoubleClick="Btn_MouseDoubleClick" Click="Button_Click" 
+                              Style="{StaticResource ToggleButtonsStyle}" Tag="/ModernIcons/eraser.png" Margin="0,0,0,15"/>
 
-                            <Slider Name="AllColorsSlider" Maximum="198" BorderBrush="AliceBlue" BorderThickness="2"  
-                                        Value="70" Height="30" Width="200" ValueChanged="Slider_ValueChanged" HorizontalAlignment="Center"  VerticalAlignment="Center"  />
-                        </Canvas>
-         
-                    </Popup>
-                </Button>
-
-                <ToggleButton  Name="UsePen" ToolTip="pen" MouseDoubleClick="Btn_MouseDoubleClick" Click="Button_Click"  Style="{StaticResource ToggleButtonsStyle}" Tag="/Icons/icons8-paint-64.png" Margin="0,0,0,15" >
-                    <Popup Name="BrushSizeSliderPopup" AllowsTransparency="True" Width="200" Placement="MousePoint" Height="40" IsOpen="False">
-                        <Border CornerRadius="5" Background="#FF080B52" BorderBrush="#FF500000" BorderThickness="1.6" Height="40" Width="200" Panel.ZIndex="4"  >
-                            <StackPanel Orientation="Horizontal" Width="200" Height="40">
-                            <Slider Name="BrushSizeSlider" Maximum="30" Value="1" 
-                                ValueChanged="Slider_ValueChanged" Width="150" Height="30"  IsSnapToTickEnabled="True"  
-                                    VerticalAlignment="Center"  HorizontalAlignment="Center" TickPlacement="TopLeft"    />
-                                <Ellipse StrokeThickness="1" Stroke="White" Margin="15,0,0,0"
-                                    Width="{Binding ElementName=BrushSizeSlider , Path=Value}"
-                                    Fill="{Binding ElementName=CurrentColorBorder,Path=Background}" Height="{Binding ElementName=BrushSizeSlider , Path=Value}"/>
-                            </StackPanel>
-                        </Border>
-                    </Popup>
-                </ToggleButton>
-                <ToggleButton Name="UseEraser" ToolTip="eraser" MouseDoubleClick="Btn_MouseDoubleClick" Click="Button_Click" Style="{StaticResource ToggleButtonsStyle}" Tag="/Icons/icons8-erase-64.png" Margin="0,0,0,15"/>
-                <ToggleButton Name="Highlighter" ToolTip="highlighter" MouseDoubleClick="Btn_MouseDoubleClick" Style="{StaticResource ToggleButtonsStyle}" IsChecked="False" Margin="0,0,0,15" Click="Button_Click" Tag="/Icons/icons8-marker-pen-48.png" />
-                <ToggleButton Name="SelectButton" ToolTip="select" Style="{StaticResource ToggleButtonsStyle}" IsChecked="False" Margin="0,0,0,15" Click="Button_Click" Tag="/Icons/icons8-selection-60.png"/>
-                <Button Name="UnDoLastStroke" ToolTip="redo" Style="{StaticResource  ButtonStyle}"  Margin="0,0,0,15" Click="ReDrawStroke_Click" Tag="/Icons/icons8-redo-64.png"/>
-                <Button Name="ReDrawStroke" ToolTip="undo" Style="{StaticResource  ButtonStyle}"  Margin="0,0,0,15" Click="ReDrawStroke_Click" Tag="/Icons/icons8-undo-64.png"/>
-                <Button Name="ReBuildCanvas" ToolTip="clear" Style="{StaticResource  ButtonStyle}" Margin="0,0,0,15" Click="ReDrawStroke_Click" Tag="/Icons/icons8-again-64.png"/>
+                <!--Select-->
+                <ToggleButton Name="SelectButton" ToolTip="select" Style="{StaticResource ToggleButtonsStyle}" 
+                              IsChecked="False" Margin="0,0,0,15" Click="Button_Click" Tag="/ModernIcons/marquee-2.png"/>
+                <!--spaceline-->
+                <Line Stroke="White" StrokeThickness="1" Fill="White" Width="20" Height="1" Margin="0,0,0,20" />
+                <!--Color-->
+                <Border Name="CurrentColorBorder" ToolTip="current color" 
+                        Margin="0,0,0,15" CornerRadius="10" Width="30" Height="30"/>
+                <!--spaceline-->
+                <Line Stroke="White" StrokeThickness="1" Fill="White" Width="20" Height="1" Margin="0,0,0,20" />
+                
+                <!--Undo-->
+                <Button Name="UnDoLastStroke" ToolTip="Undo" Style="{StaticResource  ButtonStyle}" 
+                        Margin="0,0,0,15" Click="ReDrawStroke_Click" Tag="/ModernIcons/arrow-back-up.png"/>
+                <!--Redo-->
+                <Button Name="ReDrawStroke" ToolTip="undo" Style="{StaticResource  ButtonStyle}"  Margin="0,0,0,15"
+                        Click="ReDrawStroke_Click" Tag="/ModernIcons/arrow-forward-up.png"/>
+                <!--Rebuild-->
+                <Button Name="ReBuildCanvas" ToolTip="clear" Style="{StaticResource  ButtonStyle}"
+                        Margin="0,0,0,15" Click="ReDrawStroke_Click" Tag="/ModernIcons/trash.png"/>
             </StackPanel>
-    </Border>
+        </Border>
     </Canvas>
 </Window>

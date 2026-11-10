@@ -25,6 +25,16 @@
     <None Remove="Icons\icons8-selection-60.png" />
     <None Remove="Icons\icons8-undo-64.png" />
     <None Remove="Icons\RGB_Allcolors.png" />
+    <None Remove="ModernIcons\arrow-back-up.png" />
+    <None Remove="ModernIcons\arrow-forward-up.png" />
+    <None Remove="ModernIcons\chevron-left.png" />
+    <None Remove="ModernIcons\eraser.png" />
+    <None Remove="ModernIcons\grip-horizontal.png" />
+    <None Remove="ModernIcons\highlight.png" />
+    <None Remove="ModernIcons\marquee-2.png" />
+    <None Remove="ModernIcons\pencil.png" />
+    <None Remove="ModernIcons\pointer.png" />
+    <None Remove="ModernIcons\trash.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -45,6 +55,16 @@
     <Resource Include="Icons\icons8-selection-60.png" />
     <Resource Include="Icons\icons8-undo-64.png" />
     <Resource Include="Icons\RGB_Allcolors.png" />
+    <Resource Include="ModernIcons\arrow-back-up.png" />
+    <Resource Include="ModernIcons\arrow-forward-up.png" />
+    <Resource Include="ModernIcons\chevron-left.png" />
+    <Resource Include="ModernIcons\eraser.png" />
+    <Resource Include="ModernIcons\grip-horizontal.png" />
+    <Resource Include="ModernIcons\highlight.png" />
+    <Resource Include="ModernIcons\marquee-2.png" />
+    <Resource Include="ModernIcons\pencil.png" />
+    <Resource Include="ModernIcons\pointer.png" />
+    <Resource Include="ModernIcons\trash.png" />
   </ItemGroup>
 
 </Project>
