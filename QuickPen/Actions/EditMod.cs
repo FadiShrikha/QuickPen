@@ -165,7 +165,6 @@ namespace QuickPen
             }
         }
 
-
         public System.Windows.Media.Color GetColorFromSlider(int value, BitmapSource bitmapImage)
         {
             byte[] _ColorBuffer = new byte[4];

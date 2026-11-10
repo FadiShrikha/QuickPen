@@ -107,7 +107,7 @@ namespace QuickPen
             {
                 if (e.ChangedButton == MouseButton.Left)
                 {
-                    this.BrushSizeSliderPopup.IsOpen = !BrushSizeSliderPopup.IsOpen;
+                  
 
                 }
             }
@@ -118,8 +118,6 @@ namespace QuickPen
             DrawCanvas.Height = this.Height;
             Wallpaper.Width = this.Width;
             Wallpaper.Height = this.Height;
-
-            this.BrushSizeSliderPopup.IsOpen = false;
             this.ChangeColorSliderPop.IsOpen = false;
 
 
@@ -166,7 +164,7 @@ namespace QuickPen
 
         private void Window_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            this.BrushSizeSliderPopup.IsOpen = false;
+
             this.ChangeColorSliderPop.IsOpen = false;
         }
 
@@ -185,6 +183,7 @@ namespace QuickPen
             }
 
             btn?.IsChecked = true;
+           
 
             if (btn != this.BackToCursor)
             {
@@ -237,13 +236,11 @@ namespace QuickPen
 
             }
 
-
+            btn?.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(100, 100, 2, 2));
 
         }
         private void BackToCursorState()
         {
-
-            this.BrushSizeSliderPopup.IsOpen = false;
             this.ChangeColorSliderPop.IsOpen = false;
 
             this.UseEraser.IsChecked = false;
@@ -300,26 +297,44 @@ namespace QuickPen
                     this.CurrentColorButton.Background= new SolidColorBrush(_CurrentColor);
             });
         }
+        private void SetThisColor(System.Windows.Media.Brush brush)
+        {
+
+
+            var thecolor=(SolidColorBrush)brush;
+            _CurrentColor = thecolor.Color;
+            if (DrawCanvas != null)
+                _InkCanvasMode.ChangeBrushColor(ref DrawCanvas, _CurrentColor);
+
+            this.Dispatcher.Invoke(() =>
+            {
+                if (this.CurrentColorButton != null)
+                    this.CurrentColorButton.Background = new SolidColorBrush(_CurrentColor);
+            });
+        }
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
+                if(sender is Ellipse)
+                {
+                    var ellipse = sender as Ellipse;
+                    if (ellipse != null)
+                    {
+                        var background = ellipse.Fill;
+                        SetThisColor(background);
+                    }
+
+                }
+                if (this.ChangeColorSliderPop.IsMouseOver == false)
+                    this.ChangeColorSliderPop.IsOpen = false;
+                if (this.ColorsAndSizePopup.IsMouseOver == false &&ChangeColorSliderPop.IsMouseOver==false)
+                    ColorsAndSizePopup.IsOpen = false;
 
             }
         }
         private void ManageUndo()
         {
-            if (DrawCanvas.Strokes != null && _RemovedStrokes.Count > 0)
-            {
-
-                DrawCanvas.Strokes.Add(_RemovedStrokes.Last());
-
-                _RemovedStrokes.RemoveAt(_RemovedStrokes.Count - 1);
-            }
-        }
-        private void ManageRedo()
-        {
-
             if (DrawCanvas.Strokes != null && _AddedStrokes.Count > 0)
             {
 
@@ -332,6 +347,18 @@ namespace QuickPen
                 }
 
             }
+
+        }
+        private void ManageRedo()
+        {
+
+            if (DrawCanvas.Strokes != null && _RemovedStrokes.Count > 0)
+            {
+
+                DrawCanvas.Strokes.Add(_RemovedStrokes.Last());
+
+                _RemovedStrokes.RemoveAt(_RemovedStrokes.Count - 1);
+            }
         }
         private void ManageResetCanva()
         {
@@ -343,6 +370,7 @@ namespace QuickPen
             var btn = sender as System.Windows.Controls.Button;
             if (btn == this.ReDrawStroke)
             {
+
                 ManageRedo();
             }
             else if (btn == this.UnDoLastStroke)
@@ -358,16 +386,15 @@ namespace QuickPen
             {
                 if (_InkCanvasMode != null)
                 {
-                    try
-                    {
-                        this.ChangeColorSliderPop.IsOpen = true;
-                    }
-                    catch (Exception ex)
-                    {
-                        System.Windows.MessageBox.Show(ex.Message);
-                    }
+                    this.ChangeColorSliderPop.Placement = PlacementMode.Mouse;
+                    this.ChangeColorSliderPop.IsOpen = true;
                 }
 
+            }
+            else if (btn == this.CurrentColorButton)
+            {
+                this.ColorsAndSizePopup.Placement = PlacementMode.Mouse;
+                this.ColorsAndSizePopup.IsOpen = true;
             }
 
         }
@@ -410,6 +437,7 @@ namespace QuickPen
                  DragDrop.DoDragDrop(sender as Border, sender, System.Windows.DragDropEffects.All);
             }
         }
+
 
     }
 }

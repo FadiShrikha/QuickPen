@@ -12,19 +12,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Icons\icons8-again-64.png" />
-    <None Remove="Icons\icons8-check-50.png" />
-    <None Remove="Icons\icons8-color-picker-64.png" />
-    <None Remove="Icons\icons8-cursor-64.png" />
-    <None Remove="Icons\icons8-drag-64.png" />
-    <None Remove="Icons\icons8-erase-64.png" />
-    <None Remove="Icons\icons8-eraser-24.png" />
-    <None Remove="Icons\icons8-marker-pen-48.png" />
-    <None Remove="Icons\icons8-paint-64.png" />
-    <None Remove="Icons\icons8-redo-64.png" />
-    <None Remove="Icons\icons8-selection-60.png" />
-    <None Remove="Icons\icons8-undo-64.png" />
-    <None Remove="Icons\RGB_Allcolors.png" />
     <None Remove="ModernIcons\arrow-back-up.png" />
     <None Remove="ModernIcons\arrow-forward-up.png" />
     <None Remove="ModernIcons\chevron-left.png" />
@@ -34,6 +21,7 @@
     <None Remove="ModernIcons\marquee-2.png" />
     <None Remove="ModernIcons\pencil.png" />
     <None Remove="ModernIcons\pointer.png" />
+    <None Remove="ModernIcons\RGB_Allcolors.png" />
     <None Remove="ModernIcons\trash.png" />
   </ItemGroup>
 
@@ -42,19 +30,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Icons\icons8-again-64.png" />
-    <Resource Include="Icons\icons8-check-50.png" />
-    <Resource Include="Icons\icons8-color-picker-64.png" />
-    <Resource Include="Icons\icons8-cursor-64.png" />
-    <Resource Include="Icons\icons8-drag-64.png" />
-    <Resource Include="Icons\icons8-erase-64.png" />
-    <Resource Include="Icons\icons8-eraser-24.png" />
-    <Resource Include="Icons\icons8-marker-pen-48.png" />
-    <Resource Include="Icons\icons8-paint-64.png" />
-    <Resource Include="Icons\icons8-redo-64.png" />
-    <Resource Include="Icons\icons8-selection-60.png" />
-    <Resource Include="Icons\icons8-undo-64.png" />
-    <Resource Include="Icons\RGB_Allcolors.png" />
+    <Resource Include="ModernIcons\RGB_Allcolors.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="ModernIcons\icons8-color-picker-64.png" />
     <Resource Include="ModernIcons\arrow-back-up.png" />
     <Resource Include="ModernIcons\arrow-forward-up.png" />
     <Resource Include="ModernIcons\chevron-left.png" />
