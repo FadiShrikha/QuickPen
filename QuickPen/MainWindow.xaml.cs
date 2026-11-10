@@ -74,8 +74,6 @@ namespace QuickPen
                 {
                     if (this.IsVisible)
                     {
-                        this.BrushSizeSliderPopup.IsOpen = false;
-                        this.ChangeColorSliderPop.IsOpen = false;
                         this.Hide();
                     }
                     else
@@ -298,23 +296,15 @@ namespace QuickPen
 
             this.Dispatcher.Invoke(() =>
             {
-                if (CurrentColorBorder != null)
-                    this.CurrentColorBorder.Background = new SolidColorBrush(_CurrentColor);
+                if (this.CurrentColorButton != null)
+                    this.CurrentColorButton.Background= new SolidColorBrush(_CurrentColor);
             });
         }
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                if (this.BrushSizeSliderPopup.IsMouseOver == false && this.BrushSizeSliderPopup.IsOpen == true)
-                {
-                    this.BrushSizeSliderPopup.IsOpen = false;
-                }
 
-                if (this.ChangeColorSliderPop.IsMouseOver == false && this.ChangeColorSliderPop.IsOpen == true)
-                {
-                    this.ChangeColorSliderPop.IsOpen = false;
-                }
             }
         }
         private void ManageUndo()

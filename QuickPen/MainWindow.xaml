@@ -112,6 +112,7 @@
             </Border.Style>
         </Border>
         <InkCanvas Name="DrawCanvas"   Background="Transparent" Panel.ZIndex="1"/>
+        
         <Border  x:Name="ItemsBorder" Canvas.Top="200" MouseMove="DragButton_MouseMove"   
                  Width="40" Panel.ZIndex="2"  BorderThickness="0.6" 
                 BorderBrush="White"  CornerRadius="10" Background="#1F2025">
@@ -123,7 +124,7 @@
                     </Border.Background>
                 </Border>
                <!--spaceline-->
-                <Line Stroke="White" StrokeThickness="1" Fill="White" Width="20" Height="1" Margin="0,0,0,20" />
+                <Line Stroke="#616573" StrokeThickness="1" Fill="White" Width="20" Height="1" Margin="0,0,0,20" />
                 <!--UseMouse-->
                 <ToggleButton Name="BackToCursor" ToolTip="use mouse" Style="{StaticResource  ToggleButtonsStyle}" 
                               Margin="0,0,0,15" Click="Button_Click" Tag="/ModernIcons/pointer.png"/>
@@ -142,12 +143,39 @@
                 <ToggleButton Name="SelectButton" ToolTip="select" Style="{StaticResource ToggleButtonsStyle}" 
                               IsChecked="False" Margin="0,0,0,15" Click="Button_Click" Tag="/ModernIcons/marquee-2.png"/>
                 <!--spaceline-->
-                <Line Stroke="White" StrokeThickness="1" Fill="White" Width="20" Height="1" Margin="0,0,0,20" />
+                <Line Stroke="#616573" StrokeThickness="1" Fill="White" Width="20" Height="1" Margin="0,0,0,20" />
                 <!--Color-->
-                <Border Name="CurrentColorBorder" ToolTip="current color" 
-                        Margin="0,0,0,15" CornerRadius="10" Width="30" Height="30"/>
+                <Button Name="CurrentColorButton" ToolTip="current color" Click="Button_Click" Background="AliceBlue"
+                        Margin="0,0,0,15"  Width="30" Height="30">
+                    <Button.Style >
+                        <Style TargetType="Button">
+                            <Style.Setters>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border x:Name="CurentColorButtonBorder" Background="#6476FD" CornerRadius="10"></Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="CurentColorButtonBorder" Property="Background" Value="#6476FD"/>
+                                                </Trigger>
+                                                <Trigger Property="IsMouseOver" Value="False">
+                                                    <Setter TargetName="CurentColorButtonBorder" Property="Background" Value="Transparent"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style.Setters>
+
+                        </Style>
+                    </Button.Style>
+                </Button>
+                
+                
+                
+                
                 <!--spaceline-->
-                <Line Stroke="White" StrokeThickness="1" Fill="White" Width="20" Height="1" Margin="0,0,0,20" />
+                <Line Stroke="#616573" StrokeThickness="1" Fill="White" Width="20" Height="1" Margin="0,0,0,20" />
                 
                 <!--Undo-->
                 <Button Name="UnDoLastStroke" ToolTip="Undo" Style="{StaticResource  ButtonStyle}" 
