@@ -27,45 +27,33 @@
         <Style TargetType="ToggleButton" x:Key="ToggleButtonsStyle">
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate x:Name="ctrlTem"  TargetType="ToggleButton" >
-                        <Border x:Name="buttonborder" Opacity="0.5" CornerRadius="10" Width="30"  Height="30">
+                    <ControlTemplate x:Name="ctrlTem" TargetType="ToggleButton">
+                        <Border x:Name="buttonborder"  CornerRadius="10" Width="30" Height="30">
                             <Border.Background>
-                                <SolidColorBrush Color="#6476FD" Opacity="1"/>
+                                <SolidColorBrush x:Name="background" Color="#6476FD" Opacity="0"/>
                             </Border.Background>
-                            <Image Source="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"/>
+                            <Image Opacity="0.5" Source="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Trigger.EnterActions>
-                                    <BeginStoryboard >
+                                    <BeginStoryboard>
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="buttonborder" Storyboard.TargetProperty="Background.Opacity" To="1" Duration="0:0:0.3"/>
+                                            <DoubleAnimation Storyboard.TargetName="background" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.3" />
                                         </Storyboard>
                                     </BeginStoryboard>
                                 </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="background" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.3" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
                             </Trigger>
                             <Trigger Property="IsChecked" Value="True">
-                                <Trigger.EnterActions>
-                                    <BeginStoryboard >
-                                        <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="buttonborder" Storyboard.TargetProperty="Background.Opacity" To="1" Duration="0:0:0.3"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </Trigger.EnterActions>
+                                <Setter TargetName="buttonborder" Property="Background" Value="#6476FD"/>
                             </Trigger>
-                            <MultiTrigger >
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="IsChecked" Value="False"/>
-                                    
-                                </MultiTrigger.Conditions>
-                                <MultiTrigger.EnterActions>
-                                    <BeginStoryboard >
-                                        <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="buttonborder" Storyboard.TargetProperty="Background.Opacity" To="0" Duration="0:0:0.3"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </MultiTrigger.EnterActions>
-                            </MultiTrigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -75,31 +63,29 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button" >
-                        <Border x:Name="buttonborder" CornerRadius="10" Width="30" Height="30"  BorderThickness="1.6">
+                        <Border x:Name="buttonborder" CornerRadius="10" Width="30" Height="30">
                             <Border.Background>
-                                <SolidColorBrush Color="#6476FD" Opacity="0"/>
+                                <SolidColorBrush x:Name="background" Color="#6476FD" Opacity="0"/>
                             </Border.Background>
                             <Image Opacity="0.5" Source="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Trigger.EnterActions>
-                                    <BeginStoryboard >
+                                    <BeginStoryboard>
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="buttonborder" Storyboard.TargetProperty="Background.Opacity" To="1" Duration="0:0:0.3"/>
+                                            <DoubleAnimation Storyboard.TargetName="background" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.3" />
                                         </Storyboard>
                                     </BeginStoryboard>
                                 </Trigger.EnterActions>
                                 <Trigger.ExitActions>
                                     <BeginStoryboard>
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="buttonborder" Storyboard.TargetProperty="Background.Opacity" To="0" Duration="0:0:0.3"/>
-
+                                            <DoubleAnimation Storyboard.TargetName="background" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.3" />
                                         </Storyboard>
                                     </BeginStoryboard>
                                 </Trigger.ExitActions>
                             </Trigger>
-                           
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -143,7 +129,7 @@
                         <Button Name="SelectColor" ToolTip="color slider" Click="ReDrawStroke_Click"  Style="{StaticResource  ButtonStyle}" Tag="/ModernIcons/icons8-color-picker-64.png">
                             <Popup Name="ChangeColorSliderPop" IsOpen="False" Width="300" Height="55" AllowsTransparency="True" Placement="MousePoint">
 
-                                <Canvas Margin="4,0" Width="20" Height="20" >
+                                <Canvas Margin="4,0">
                                     <Image Name="RgbColorsImage" Source="/ModernIcons/RGB_Allcolors.png"/>
 
                                     <Slider Name="AllColorsSlider" Maximum="198" BorderBrush="AliceBlue" BorderThickness="2"  
@@ -206,7 +192,15 @@
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate>
-                                            <Ellipse Stroke="White" StrokeThickness="2" Fill="{TemplateBinding Background}"/>
+                                            <Ellipse x:Name="cir" Stroke="White" StrokeThickness="2" Fill="{TemplateBinding Background}"/>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="cir" Property="Stroke" Value="White"/>
+                                                </Trigger>
+                                                <Trigger Property="IsMouseOver" Value="False">
+                                                    <Setter TargetName="cir" Property="Stroke" Value="#4C505C"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
                                         </ControlTemplate>
                                     </Setter.Value>
                                 </Setter>
