@@ -15,7 +15,6 @@ namespace QuickPen
         public InkCanvasEditingMode EraseBy;
 
         public System.Windows.Media.Color PenColor;
-        public System.Windows.Media.Color? LastColor;
 
         public EditMod()
         {
@@ -24,7 +23,7 @@ namespace QuickPen
             IsEraser = false;
             EraseBy = InkCanvasEditingMode.EraseByStroke;
             PenColor = Color.FromRgb(255, 255, 255);
-            LastColor = null;
+
 
         }
     }
@@ -42,7 +41,7 @@ namespace QuickPen
     public class SetInkCanvasMode
     {
         public Color CurrentColor;
-        Color? LastColor;
+  
         public InkCanvasState? _CurrentCanvasState;
 
         public SetInkCanvasMode()

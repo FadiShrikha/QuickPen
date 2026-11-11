@@ -175,7 +175,7 @@
                               IsChecked="False" Margin="0,0,0,15" Click="Button_Click" Tag="/ModernIcons/highlight.png" />
 
                 <!--Eraser-->
-                <ToggleButton Name="UseEraser" ToolTip="eraser" MouseDoubleClick="Btn_MouseDoubleClick" Click="Button_Click" 
+                <ToggleButton Name="UseEraser" ToolTip="eraser" Click="Button_Click" 
                               Style="{StaticResource ToggleButtonsStyle}" Tag="/ModernIcons/eraser.png" Margin="0,0,0,15"/>
 
                 <!--Select-->
@@ -214,7 +214,7 @@
                 
                 <!--spaceline-->
                 <Line Stroke="#616573" StrokeThickness="1" Fill="White" X1="30" Width="20" Height="1" Margin="0,0,0,20" />
-                
+               
                 <!--Undo-->
                 <Button Name="UnDoLastStroke" ToolTip="Undo" Style="{StaticResource  ButtonStyle}" 
                         Margin="0,0,0,15" Click="ReDrawStroke_Click" Tag="/ModernIcons/arrow-back-up.png"/>

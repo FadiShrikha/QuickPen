@@ -18,10 +18,10 @@ namespace QuickPen
     /// </summary>
     public partial class MainWindow : Window
     {
-        GlobalHotKey HideShowWindow;
-        GlobalHotKey ClearAllHotkey;
-        GlobalHotKey RedoHotKey;
-        GlobalHotKey UndoHotKey;
+        GlobalHotKey? HideShowWindow;
+        GlobalHotKey? ClearAllHotkey;
+        GlobalHotKey? RedoHotKey;
+        GlobalHotKey? UndoHotKey;
 
         private DrawingAttributes _DrawingPen = SetInkCanvasMode.GetDefualtAttributes();
         private SetInkCanvasMode _InkCanvasMode = new();
@@ -97,20 +97,6 @@ namespace QuickPen
             }
 
             return IntPtr.Zero;
-        }
-
-
-        private void Btn_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            var Btn = sender as ToggleButton;
-            if (Btn == this.UsePen || Btn == this.Highlighter)
-            {
-                if (e.ChangedButton == MouseButton.Left)
-                {
-                  
-
-                }
-            }
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -319,10 +305,15 @@ namespace QuickPen
                 if(sender is Ellipse)
                 {
                     var ellipse = sender as Ellipse;
+
                     if (ellipse != null)
                     {
-                        var background = ellipse.Fill;
-                        SetThisColor(background);
+                        var tag = ellipse.Tag as string;
+                        if (tag == "ColorEllipse")
+                        {
+                            var background = ellipse.Fill;
+                            SetThisColor(background);
+                        }
                     }
 
                 }
@@ -342,6 +333,7 @@ namespace QuickPen
 
                 if (DrawCanvas.Strokes != null)
                 {
+                    
                     _InkCanvasMode.Undo(ref DrawCanvas, strokes);
                     _AddedStrokes.RemoveAt(_AddedStrokes.Count - 1);
                 }
