@@ -26,3 +26,7 @@ Presenters & Educators: Lead engaging meetings or lectures by highlighting detai
 
 Visual Problem Solvers: Sketch fast concepts, solve equations, or take quick notes without stepping away from your focus.
 
+this app is the first of my collection that gets publish on Microsoft store, and you can access it on this link
+ https://apps.microsoft.com/detail/9n6nccn46xm5?ocid=webpdpshare
+
+or type QuickPen on Microsoft store to download it
